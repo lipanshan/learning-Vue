@@ -23,7 +23,7 @@
       <ul v-show="ratings && ratings.length" class="ratting-list">
         <li v-show="select(rating)" v-for="rating in ratings" class="item border-1px">
           <div>
-            <span class="ratting-time">{{rating.rateTime}}</span>
+            <span class="ratting-time">{{rating.rateTime | formatDate}}</span>
             <div class="num-avatar">
               <span class="num">{{rating.username}}</span>
               <img alt="" v-bind:src="rating.avatar" class="avatar">
@@ -174,6 +174,9 @@
   }
 </style>
 <script type="text/ecmascript-6">
+import {formatDate} from '../../common/js/formatdate';
+const allNum = 2;
+const recommend = 0;
 export default {
   props: {
     ratings: {
@@ -195,7 +198,7 @@ export default {
     selectType: {
       type: Number,
       default () {
-        return 2;
+        return allNum;
       }
     },
     onlyContent: {
@@ -220,7 +223,7 @@ export default {
     recommendNum () {
       let num = 0;
       this.ratings.forEach((value) => {
-        if (value.rateType === 0) {
+        if (value.rateType === recommend) {
           num++;
         }
       });
@@ -230,11 +233,17 @@ export default {
       if (this.onlyContent && !item.text) {
         return false;
       }
-      if (this.selectType === item.rateType || this.selectType === 2) {
+      if (this.selectType === item.rateType || this.selectType === allNum) {
         return true;
       } else {
         return false;
       }
+    }
+  },
+  filters: {
+    formatDate (time) {
+      let date = new Date(time);
+      return formatDate(date, 'yyyy-mm-dd hh:ii');
     }
   },
   components: {}
