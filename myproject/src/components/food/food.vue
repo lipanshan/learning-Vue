@@ -30,7 +30,13 @@
         <row></row>
         <div class="food-evaluate">
           <h2 class="instroduction">商品评价</h2>
-          <rattingSelect></rattingSelect>
+          <rattingSelect
+            v-on:selectTagType="selectTagType"
+            v-on:triggerOnlyContent="showOnlyContent"
+            v-bind:tagData="tagData"
+            v-bind:selectType="selectType"
+            v-bind:ratings="food.ratings"
+            v-bind:onlyContent="onlyContent"></rattingSelect>
         </div>
       </div>
     </div>
@@ -184,7 +190,15 @@
       }
     }
     .food-evaluate {
-      padding: 18px;
+      margin-top: 18px;
+
+      .instroduction {
+        margin-left: 18px;
+        margin-right: 18px;
+        font-size: 14px;
+        line-height: 14px;
+        color: rgb(7, 17, 27);
+      }
     }
   }
 </style>
@@ -195,6 +209,7 @@
   import cartControl from '../../components/cartcontrol/cartcontrol';
   import rattingSelect from '../rattingselect/rattingselect';
 
+  const selectTypeVal = 2;
   export default {
     props: {
       food: {
@@ -206,7 +221,14 @@
     },
     data () {
       return {
-        showFlag: false
+        showFlag: false,
+        selectType: selectTypeVal,
+        onlyContent: false,
+        tagData: {
+          allTxt: '全部',
+          recommendTxt: '推荐',
+          noRecommend: '吐槽'
+        }
       };
     },
     computed: {
@@ -245,6 +267,18 @@
         } else {
           Vue.set(this.food, 'count', 1);
         }
+      },
+      selectTagType (index) {
+        this.selectType = index;
+        this.$nextTick(() => {
+          this.BetterScroll.refresh();
+        });
+      },
+      showOnlyContent () {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.BetterScroll.refresh();
+        });
       }
     },
     components: {
