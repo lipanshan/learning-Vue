@@ -7,11 +7,11 @@
         </li>
         <li v-on:click="selectTab(0)" v-bind:class="{active: selectType === 0 }" class="tag">
           <span class="tag-txt">{{tagData.recommendTxt}}</span>
-          <span class="tag-num">{{this.recommendNum()}}</span>
+          <span class="tag-num">{{recommendNum.length}}</span>
         </li>
         <li v-on:click="selectTab(1)" v-bind:class="{active: selectType === 1 }" class="tag tag-color">
           <span class="tag-txt">{{tagData.noRecommend}}</span>
-          <span class="tag-num">{{ratings.length - this.recommendNum()}}</span>
+          <span class="tag-num">{{noRecommendNum.length}}</span>
         </li>
       </ul>
       <div class="ratting-content-wrap border-1px">
@@ -20,21 +20,6 @@
         </span>
         <p class="ratting-txt">只看有内容的评价</p>
       </div>
-      <ul v-show="ratings && ratings.length" class="ratting-list">
-        <li v-show="select(rating)" v-for="rating in ratings" class="item border-1px">
-          <div>
-            <span class="ratting-time">{{rating.rateTime | formatDate}}</span>
-            <div class="num-avatar">
-              <span class="num">{{rating.username}}</span>
-              <img alt="" v-bind:src="rating.avatar" class="avatar">
-            </div>
-          </div>
-          <div class="txt">
-            <i v-bind:class="{'icon-thumb_down': rating.rateType === 1, 'icon-thumb_up': rating.rateType === 0}" ></i>{{rating.text}}
-          </div>
-        </li>
-      </ul>
-      <p v-show="!ratings.length" class="no-ratting">暂无评论</p>
     </div>
 </template>
 <style lang="scss" rel="stylesheet/scss" scoped>
@@ -103,80 +88,12 @@
         color: rgb(147, 153, 159);
       }
     }
-    .ratting-list {
-      margin-left:18px;
-      margin-right: 18px;
-
-      .item {
-        padding-top: 16px;
-        padding-bottom:16px;
-
-        &>div {
-          height: 12px;
-
-          .ratting-time {
-            float: left;
-            font-size:10px;
-            line-height: 12px;
-            color: rgb(147, 153, 159);
-          }
-          .num-avatar {
-            float: right;
-
-            .num {
-              float: left;
-              margin-right: 6px;
-              font-size: 10px;
-              line-height: 12px;
-              color: rgb(147, 153, 159);
-            }
-            .avatar {
-              float: left;
-              width: 12px;
-              height: 12px;
-              border-radius: 50%;
-            }
-          }
-         }
-        .txt {
-          margin-top: 6px;
-          font-size: 12px;
-          line-height: 16px;
-          color: rgb(7, 17, 27);
-
-          .icon-thumb_down {
-            margin-right: 4px;
-            color: rgb(147, 153, 159);
-
-            &.active {
-                color: #00b43c;
-             }
-           }
-
-          .icon-thumb_up {
-            margin-right: 4px;
-            color: rgb(147, 153, 159);
-
-            &.active {
-                color: #00b43c;
-             }
-           }
-        }
-      }
-    }
-    .no-ratting {
-      margin: 0 18px;
-      padding: 16px 0;
-      font-size: 12px;
-      line-height: 16px;
-      color: rgb(147, 153, 159);
-    }
   }
 </style>
 <script type="text/ecmascript-6">
-import {formatDate} from '../../common/js/formatdate';
 const allNum = 2;
 const recommend = 0;
+const noRecommend = 1;
 export default {
   props: {
     ratings: {
@@ -213,37 +130,24 @@ export default {
       ratingList: []
     };
   },
+  computed: {
+    recommendNum () {
+      return this.ratings.filter((value) => {
+        return value.rateType === recommend;
+      });
+    },
+    noRecommendNum () {
+      return this.ratings.filter((value) => {
+        return value.rateType === noRecommend;
+      });
+    }
+  },
   methods: {
     selectTab (index) {
       this.$emit('selectTagType', index);
     },
     selectOnlyContent () {
       this.$emit('triggerOnlyContent');
-    },
-    recommendNum () {
-      let num = 0;
-      this.ratings.forEach((value) => {
-        if (value.rateType === recommend) {
-          num++;
-        }
-      });
-      return num;
-    },
-    select (item) {
-      if (this.onlyContent && !item.text) {
-        return false;
-      }
-      if (this.selectType === item.rateType || this.selectType === allNum) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  },
-  filters: {
-    formatDate (time) {
-      let date = new Date(time);
-      return formatDate(date, 'yyyy-mm-dd hh:ii');
     }
   },
   components: {}

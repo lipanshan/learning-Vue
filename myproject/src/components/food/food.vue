@@ -38,6 +38,21 @@
             v-bind:ratings="food.ratings"
             v-bind:onlyContent="onlyContent"></rattingSelect>
         </div>
+        <ul v-show="food.ratings && food.ratings.length" class="ratting-list">
+          <li v-show="select(rating)" v-for="rating in food.ratings" class="item border-1px">
+            <div>
+              <span class="ratting-time">{{rating.rateTime | formatDate}}</span>
+              <div class="num-avatar">
+                <span class="num">{{rating.username}}</span>
+                <img alt="" v-bind:src="rating.avatar" class="avatar">
+              </div>
+            </div>
+            <div class="txt">
+              <i v-bind:class="{'icon-thumb_down': rating.rateType === 1, 'icon-thumb_up': rating.rateType === 0}" ></i>{{rating.text}}
+            </div>
+          </li>
+        </ul>
+        <p v-show="!food.ratings || !food.ratings.length" class="no-ratting">暂无评论</p>
       </div>
     </div>
   </transition>
@@ -200,6 +215,73 @@
         color: rgb(7, 17, 27);
       }
     }
+    .ratting-list {
+      margin-left:18px;
+      margin-right: 18px;
+
+      .item {
+        padding-top: 16px;
+        padding-bottom:16px;
+
+        &>div {
+           height: 12px;
+
+          .ratting-time {
+            float: left;
+            font-size:10px;
+            line-height: 12px;
+            color: rgb(147, 153, 159);
+          }
+          .num-avatar {
+            float: right;
+
+            .num {
+              float: left;
+              margin-right: 6px;
+              font-size: 10px;
+              line-height: 12px;
+              color: rgb(147, 153, 159);
+            }
+            .avatar {
+              float: left;
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+            }
+        }
+      }
+      .txt {
+        margin-top: 6px;
+        font-size: 12px;
+        line-height: 16px;
+        color: rgb(7, 17, 27);
+
+        .icon-thumb_down {
+          margin-right: 4px;
+          color: rgb(147, 153, 159);
+
+          &.active {
+             color: #00b43c;
+           }
+        }
+        .icon-thumb_up {
+          margin-right: 4px;
+          color: #00a0dc;
+
+          &.active {
+             color: #00b43c;
+           }
+        }
+      }
+    }
+    }
+    .no-ratting {
+      margin: 0 18px;
+      padding: 16px 0;
+      font-size: 12px;
+      line-height: 16px;
+      color: rgb(147, 153, 159);
+    }
   }
 </style>
 <script type="text/ecmascript-6">
@@ -208,7 +290,11 @@
   import row from '../../components/row/row';
   import cartControl from '../../components/cartcontrol/cartcontrol';
   import rattingSelect from '../rattingselect/rattingselect';
+  import {formatDate} from '../../common/js/formatdate';
 
+  const allNum = 2;
+  const recommend = 0;
+  const noRecommend = 1;
   const selectTypeVal = 2;
   export default {
     props: {
@@ -243,6 +329,8 @@
     methods: {
       show () {
         this.showFlag = true;
+        this.selectType = selectTypeVal;
+        this.onlyContent = false;
         this.$nextTick(() => {
           if (!this.BetterScroll) {
             this.BetterScroll = new Bscroll(this.$refs.foodWrapper, {
@@ -279,6 +367,22 @@
         this.$nextTick(() => {
           this.BetterScroll.refresh();
         });
+      },
+      select (item) {
+        if (this.onlyContent && !item.text) {
+          return false;
+        }
+        if (this.selectType === item.rateType || this.selectType === allNum) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+    filters: {
+      formatDate (time) {
+        let date = new Date(time);
+        return formatDate(date, 'yyyy-mm-dd hh:ii');
       }
     },
     components: {

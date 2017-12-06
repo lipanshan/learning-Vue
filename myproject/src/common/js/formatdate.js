@@ -1,5 +1,4 @@
 export function formatDate (timeDate, format) {
-  console.log(timeDate);
   let year = timeDate.getFullYear() + '';
   if (/(y+)/gi.test(format)) {
     format = format.replace(RegExp.$1, year.substr((4 - RegExp.$1.length)));
