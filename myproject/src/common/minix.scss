@@ -58,3 +58,17 @@
     @include line-right(rgba(255,255,255,0.1));
   }
 }
+.border1px {
+  position: relative;
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px solid rgba(7, 17, 27, 0.2);
+  }
+}

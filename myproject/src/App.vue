@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-header v-bind:seller="seller"></v-header>
-    <div class="nav-tab">
+    <div class="nav-tab border-1px">
       <div class="tab-item">
         <router-link to="goods">商品</router-link>
       </div>

@@ -19,6 +19,12 @@
       transform: scaleX(0.7);
     }
   }
+  .border1px {
+    &:after {
+      transform: scaleX(0.7);
+      transform: scaleY(0.7);
+    }
+  }
 }
 @media screen and (-webkit-min-device-pixel-ratio: 2),(min-device-pixel-ratio: 2) {
   .border-1px {
@@ -39,6 +45,12 @@
   .border-right-1px {
     &:after {
       transform: scaleX(0.5);
+    }
+  }
+  .border1px {
+    &:after {
+      transform: scaleX(0.5);
+      transform: scaleY(0.5);
     }
   }
 }

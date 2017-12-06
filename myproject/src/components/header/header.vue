@@ -364,7 +364,10 @@
     name: 'header',
     props: {
       seller: {
-        type: Object
+        type: Object,
+        default () {
+          return {};
+        }
       }
     },
     data () {

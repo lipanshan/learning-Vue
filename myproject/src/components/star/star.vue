@@ -37,10 +37,10 @@
     &-36 {
       .star-item {
         display: inline-block;
-        width: 18px;
-        height: 18px;
-        margin-right: 11px;
-        background-size:18px 18px;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+        background-size:15px 15px;
         &.on {
           @include bg-image('./star36_on@2x.png');
          }
@@ -57,7 +57,7 @@
       }
     }
 
-    &-48 {
+    &-24 {
       .star-item {
         display: inline-block;
         width: 12px;

@@ -114,15 +114,11 @@ export default {
     },
     selectType: {
       type: Number,
-      default () {
-        return allNum;
-      }
+      default: allNum
     },
     onlyContent: {
       type: Boolean,
-      default () {
-        return true;
-      }
+      default: true
     }
   },
   data () {
