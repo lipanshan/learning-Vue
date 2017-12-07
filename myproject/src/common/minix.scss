@@ -72,3 +72,15 @@
     border: 1px solid rgba(7, 17, 27, 0.2);
   }
 }
+.border-r1px {
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: 0;
+    width: 0;
+    height: 100%;
+    @include line-right(rgba(7, 17, 27, 0.1));
+  }
+}

@@ -41,6 +41,7 @@
         border-radius: 1px;
         background-color: rgba(0, 160, 220, 0.2);
         color: rgb(77, 85, 93);
+        cursor: pointer;
 
         &.active {
           background-color: rgba(0, 160, 220, 1);
@@ -74,6 +75,7 @@
         font-size: 24px;
         line-height: 24px;
         color: rgb(147, 153, 159);
+        cursor: pointer;
 
         &.active {
            color: #00b43c;
