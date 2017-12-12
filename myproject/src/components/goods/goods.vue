@@ -1,5 +1,5 @@
 <template>
-  <div class="goods border-top1px">
+  <div class="goods">
     <div class="sidebar" ref="menuWrapper">
       <ul>
         <li v-for="(good, index) in goods" v-on:click="selectMenu(index)" class="sidebar-item border-1px" v-bind:class="{'currentIndex':currentIndex === index}" ><span class="txt"><i v-if="goods[index].type>0" v-bind:class="classMap[goods[index].type]" class="icon"></i>{{good.name}}</span></li>

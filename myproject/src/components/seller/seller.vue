@@ -1,6 +1,6 @@
 <template>
   <div class="seller-wrapper" ref="sellerWrapper">
-    <div v-if="seller" class="seller-content">
+    <div class="seller-content">
       <div class="seller-info border-1px">
         <h1 class="seller-name">{{seller.name}}</h1>
         <div class="star-wrapper">
@@ -9,8 +9,8 @@
           <span class="num-txt">月售{{seller.sellCount}}单</span>
         </div>
         <div class="collection-wrap">
-          <div class="collection"><i class="icon-favorite"></i></div>
-          <div class="collection-txt">已收藏</div>
+          <div v-on:click="toggleFavorite" class="collection" v-bind:class="{'active':favorite}"><i class="icon-favorite"></i></div>
+          <div class="collection-txt">{{favoriteTxt}}</div>
         </div>
       </div>
       <div class="server-wrap">
@@ -47,7 +47,7 @@
       <row></row>
       <div class="seller-info-wrap">
         <h2 class="seller-name">商家实景</h2>
-        <div class="img-list-wrap"><scrollimg v-bind:pics="seller.pics"></scrollimg></div>
+        <div class="img-list-wrap"><scrollimg v-if="seller.pics" v-bind:pics="seller.pics"></scrollimg></div>
       </div>
       <row></row>
       <div class="coupons-wrap"><coupons v-bind:size="0" v-bind:coupons="seller.infos"></coupons></div>
@@ -98,12 +98,17 @@
         position: absolute;
         top: 18px;
         right: 0;
+        width: 50px;
         text-align: center;
 
         .collection {
           font-size: 24px;
           line-height: 24px;
-          color: rgb(240, 20, 20);
+          color: rgb(77, 85, 93);
+
+          &.active {
+             color: rgb(240, 20, 20);
+           }
         }
         .collection-txt {
           margin-top: 4px;
@@ -194,29 +199,65 @@
   import row from '../row/row';
   import coupons from '../coupons/coupons';
   import scrollimg from '../scrollimg/scrollimg';
+  import {setLocalstorage, getLocalstorage} from '../../common/js/store';
 
   const ErrorNum = 0;
   export default {
+    props: {
+      seller: {
+        type: Object,
+        default () {
+          return {};
+        }
+      }
+    },
     data () {
       return {
-        seller: null,
-        scroll: null
+        scroll: null,
+        favorite: false,
+        urlId: null
       };
     },
-    mounted () {
-      this.$http.get('/api/seller').then((response) => {
-        if (response.body.errno === ErrorNum) {
-          this.seller = response.body.data;
-          this.$nextTick(() => {
-            this.scroll = new Bscroll(this.$refs.sellerWrapper, {
-              click: true,
-              probeType: 3
-            });
-          });
-        }
-      });
+    watch: {
+      'seller' () {
+        this._initScroll();
+        this._initFavorite();
+      }
     },
-    montheds: {
+    created () {
+      this._initScroll();
+      this._initFavorite();
+    },
+    computed: {
+      favoriteTxt () {
+        return this.favorite ? '已收藏' : '收藏';
+      }
+    },
+    methods: {
+      toggleFavorite () {
+        this.favorite = !this.favorite;
+        setLocalstorage(this.seller.id.id, 'favorite', this.favorite);
+      },
+      _initScroll () {
+        this.$nextTick(() => {
+          if (this.scroll) {
+            this.scroll.refresh();
+          } else {
+            this.scroll = new Bscroll(this.$refs.sellerWrapper, {
+              probeType: 3,
+              click: true
+            });
+          }
+        });
+      },
+      _initFavorite () {
+        let def = getLocalstorage(this.seller.id.id, 'favorite', null);
+        if (def === null) {
+          setLocalstorage(this.seller.id.id, 'favorite', this.favorite);
+        } else {
+          this.favorite = def;
+        }
+      }
     },
     components: {
       Bscroll,

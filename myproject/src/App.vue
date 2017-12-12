@@ -20,18 +20,23 @@
 
 <script type="text/ecmascript-6">
   import vHeader from './components/header/header';
+  import {getUrl} from './common/js/geturl';
   const Error_NB = 0;
   export default {
     name: 'app',
     data () {
       return {
-        seller: {}
+        seller: {
+          id: (() => {
+            return getUrl();
+          })()
+        }
       };
     },
     created () {
-      this.$http.get('/api/seller').then((response) => {
+      this.$http.get('/api/seller?id=' + this.seller.id + '').then((response) => {
         if (response.body.errno === Error_NB) {
-          this.seller = response.body.data;
+          this.seller = Object.assign({}, response.body.data, this.seller);
         }
       });
     },

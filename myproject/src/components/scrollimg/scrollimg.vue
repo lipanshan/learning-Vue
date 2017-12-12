@@ -44,7 +44,7 @@
         }
       }
     },
-    created () {
+    mounted () {
       this._initListWidth();
     },
     data () {
