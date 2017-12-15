@@ -12,6 +12,9 @@
           </div>
           <div class="recommend-list">
             <h1 class="list-title">热门歌单推荐</h1>
+            <div class="loading-wrap" v-show="!hotRecommendList.length">
+              <loading></loading>
+            </div>
             <ul class="hot-song-list">
               <li v-for="item in hotRecommendList" class="item">
                 <div class="img-wrap">
@@ -49,6 +52,7 @@
           text-align: center
           font-size: $font-size-medium
           color: $color-theme
+        .loading-wrap
         .hot-song-list
           .item
             display: flex
@@ -86,6 +90,7 @@
   import {recommend, hotRecommend} from 'api/recommend'
   import slider from 'base/slider'
   import scroll from 'base/scroll'
+  import loading from 'base/loading'
   const ERROR_OK = 0
 
   export default {
@@ -99,8 +104,8 @@
     mounted () {
       setTimeout(() => {
         this._getRecommondData()
+        this._getHotRecommend()
       }, 4000)
-      this._getHotRecommend()
     },
     methods: {
       _getRecommondData () {
@@ -126,7 +131,8 @@
     },
     components: {
       slider,
-      scroll
+      scroll,
+      loading
     }
   }
 </script>
