@@ -102,10 +102,8 @@
       }
     },
     mounted () {
-      setTimeout(() => {
-        this._getRecommondData()
-        this._getHotRecommend()
-      }, 4000)
+      this._getRecommondData()
+      this._getHotRecommend()
     },
     methods: {
       _getRecommondData () {
