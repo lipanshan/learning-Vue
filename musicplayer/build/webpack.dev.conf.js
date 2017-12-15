@@ -8,11 +8,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
-const appData = require('../data.json')
 const express = require('express')
-const seller = appData.seller
-const ratings = appData.ratings
-const goods = appData.goods
+const axios = require('axios')
 const apiRouter = express.Router()
 
 const HOST = process.env.HOST
@@ -28,23 +25,18 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   // these devServer options should be customized in /config/index.js
   devServer: {
     before (apiRouter) {
-      apiRouter.get('/api/seller', function(req, res){
-        res.json({
-          errno: 0,
-          data: seller
-        });
-      }),
-      apiRouter.get('/api/ratings', function(req, res){
-        res.json({
-          errno: 0,
-          data: ratings
-        });
-      }),
-      apiRouter.get('/api/goods', function(req, res){
-        res.json({
-          errno: 0,
-          data: goods
-        });
+      apiRouter.get('/hotrecommendlist', function (req, res) {
+        const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
       })
     },
     clientLogLevel: 'warning',
