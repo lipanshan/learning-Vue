@@ -3,6 +3,7 @@
     <div class="scroll-content">
       <slot></slot>
     </div>
+    <slot name="serialNum"></slot>
   </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -48,6 +49,9 @@
       },
       refresh () {
         this.scroll && this.scroll.refresh()
+      },
+      scrollToElement (el) {
+        this.scroll && this.scroll.scrollToElement(el)
       }
     },
     watch: {

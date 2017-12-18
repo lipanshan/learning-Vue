@@ -1,10 +1,6 @@
 <template>
     <div class="singer">
-      <ul class="singer-list">
-        <li v-for="sing in singList" class="sing">
-          {{sing.title}}
-        </li>
-      </ul>
+      <list-view :data="singList"></list-view>
     </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -17,8 +13,9 @@
 </style>
 <script type="text/ecmascript-6">
   import {getSingerList} from 'api/singer'
+  import listView from 'base/listview'
   const ERROR_OK = 0
-  const HOT_NAME = '热门'
+  const HOT_NAME = '热'
   const HOT_NUM = 10
 
   export default {
@@ -79,6 +76,9 @@
         result.unshift(hotGroup)
         return result
       }
+    },
+    components: {
+      listView
     }
   }
 </script>
