@@ -106,11 +106,6 @@
     created () {
       this.listHeight = []
     },
-    mounted () {
-      this.$nextTick(() => {
-        this._initListHeight()
-      })
-    },
     computed: {
       serialList () {
         return this.data && this.data.map((group) => {
@@ -144,22 +139,22 @@
         this.current = Number(serialNum1)
       },
       scrollEvent (pos) {
-        let y = Math.abs(pos.y)
-        for (let i = 0; i < this.listHeight.length; i++) {
-          let nowLi = this.listHeight[i]
-          let nextLi = this.listHeight[i + 1]
-          if (nowLi < y && y < nextLi) {
-            this.current = i
-            return
+        this._initListHeight()
+        this.$nextTick(() => {
+          let y = Math.abs(pos.y)
+          for (let i = 0; i < this.listHeight.length; i++) {
+            let nowLi = this.listHeight[i]
+            let nextLi = this.listHeight[i + 1]
+            if (nowLi < y && y < nextLi) {
+              this.current = i
+              return
+            }
           }
-          if (!nextLi && nowLi < y) {
-            this.current = i
-            return
-          }
-        }
+        })
       },
       _initListHeight () {
         let list = this.$refs.listGroup.getElementsByClassName('list-group-hook')
+        this.listHeight.length = 0
         let h = 0
         this.listHeight.push(h)
         for (let i = 0; i < list.length; i++) {
