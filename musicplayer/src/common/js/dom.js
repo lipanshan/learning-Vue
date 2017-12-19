@@ -15,5 +15,7 @@ export function removeClass (el, className) {
     return
   }
   let arr = el.className.split(className)
+  arr[0] = arr[0].trim()
+  arr[1] = arr[1].trim()
   el.className = arr.join('')
 }

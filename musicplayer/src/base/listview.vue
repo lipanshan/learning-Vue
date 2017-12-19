@@ -1,7 +1,7 @@
 <template>
-  <scroll class="list-view" ref="listView">
+  <scroll class="list-view" :data="data" :probeType="probeType" @scrollEvent="scrollEvent" ref="listView">
     <ul class="list-wrap" ref="listGroup">
-      <li v-for="(group, key) in data" class="list-group">
+      <li v-for="(group, key) in data" class="list-group list-group-hook">
         <h2 :data-index="key"  class="list-group-title list-group-title-hook">{{group.title}}</h2>
         <ul>
           <li v-for="item in group.item" class="list-group-item">
@@ -14,7 +14,7 @@
     <ul ref="listShortCut" class="list-shortcut" slot="serialNum"
         @touchstart.stop.prevent="onshortcuttouchstart"
         @touchmove.stop.prevent="onshortcuttouchmove">
-      <li v-for="(item, i) in serialList" :data-index="i"class="item item-hook">{{item}}</li>
+      <li v-for="(item, i) in serialList" :data-index="i" :class="{'current': current === i}" class="item item-hook">{{item}}</li>
     </ul>
   </scroll>
 </template>
@@ -88,7 +88,6 @@
 </style>
 <script type="text/ecmascript-6">
   import scroll from 'base/scroll'
-  import {addClass, removeClass} from 'common/js/dom'
   export default {
     props: {
       data: {
@@ -100,8 +99,17 @@
     },
     data () {
       return {
-        current: 0
+        current: 0,
+        probeType: 3
       }
+    },
+    created () {
+      this.listHeight = []
+    },
+    mounted () {
+      this.$nextTick(() => {
+        this._initListHeight()
+      })
     },
     computed: {
       serialList () {
@@ -131,15 +139,33 @@
         }
       },
       activeElem (elem) {
-        let list = this.$refs.listShortCut.getElementsByClassName('item-hook')
         let serialNum1 = elem.getAttribute('data-index')
         this.$refs.listView.scrollToElement(elem)
-        for (let i = 0; i < list.length; i++) {
-          if (serialNum1 === list[i].getAttribute('data-index')) {
-            addClass(list[Number(serialNum1)], 'current')
-          } else {
-            removeClass(list[Number(serialNum1)], 'current')
+        this.current = Number(serialNum1)
+      },
+      scrollEvent (pos) {
+        let y = Math.abs(pos.y)
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let nowLi = this.listHeight[i]
+          let nextLi = this.listHeight[i + 1]
+          if (nowLi < y && y < nextLi) {
+            this.current = i
+            return
           }
+          if (!nextLi && nowLi < y) {
+            this.current = i
+            return
+          }
+        }
+      },
+      _initListHeight () {
+        let list = this.$refs.listGroup.getElementsByClassName('list-group-hook')
+        let h = 0
+        this.listHeight.push(h)
+        for (let i = 0; i < list.length; i++) {
+          let liHeight = list[i].getBoundingClientRect().height
+          h += liHeight
+          this.listHeight.push(h)
         }
       }
     },

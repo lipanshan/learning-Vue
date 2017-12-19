@@ -46,12 +46,18 @@
           probeType: this.probeType,
           click: this.click
         })
+        this.onscroll()
       },
       refresh () {
         this.scroll && this.scroll.refresh()
       },
       scrollToElement (el) {
         this.scroll && this.scroll.scrollToElement(el)
+      },
+      onscroll () {
+        this.scroll.on('scroll', (pos) => {
+          this.$emit('scrollEvent', pos)
+        })
       }
     },
     watch: {
