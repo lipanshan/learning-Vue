@@ -1,6 +1,6 @@
 <template>
     <div class="singer">
-      <list-view :data="singList"></list-view>
+      <list-view :dataList="singList"></list-view>
     </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -15,7 +15,7 @@
   import {getSingerList} from 'api/singer'
   import listView from 'base/listview'
   const ERROR_OK = 0
-  const HOT_NAME = '热'
+  const HOT_NAME = '热门'
   const HOT_NUM = 10
 
   export default {

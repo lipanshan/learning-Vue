@@ -4,6 +4,8 @@
       <slot></slot>
     </div>
     <slot name="serialNum"></slot>
+    <slot name="fixedTitle"></slot>
+    <slot name="loading"></slot>
   </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>

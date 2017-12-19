@@ -1,7 +1,7 @@
 <template>
-  <scroll class="list-view" :data="data" :probeType="probeType" @scrollEvent="scrollEvent" ref="listView">
+  <scroll class="list-view" :dataList="dataList" :probeType="probeType" @scrollEvent="scrollEvent" ref="listView">
     <ul class="list-wrap" ref="listGroup">
-      <li v-for="(group, key) in data" class="list-group list-group-hook">
+      <li v-for="(group, key) in dataList" class="list-group list-group-hook">
         <h2 :data-index="key"  class="list-group-title list-group-title-hook">{{group.title}}</h2>
         <ul>
           <li v-for="item in group.item" class="list-group-item">
@@ -16,6 +16,12 @@
         @touchmove.stop.prevent="onshortcuttouchmove">
       <li v-for="(item, i) in serialList" :data-index="i" :class="{'current': current === i}" class="item item-hook">{{item}}</li>
     </ul>
+    <div class="fixed-title-wrap" slot="fixedTitle">
+      <h2 ref="fixedTitleTag" class="fixed-title">{{fixedTitle}}</h2>
+    </div>
+    <div v-if="dataList" v-show="!dataList.length" slot="loading" class="loading-container">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -68,7 +74,7 @@
         font-size: $font-size-small
         &.current
           color: $color-theme
-    .list-fixed
+    .fixed-title-wrap
       position: absolute
       top: 0
       left: 0
@@ -88,9 +94,12 @@
 </style>
 <script type="text/ecmascript-6">
   import scroll from 'base/scroll'
+  import loading from 'base/loading'
+  const FIXEDTITLE_H = 30
+  const FIXEDTITLE_TOP = 88
   export default {
     props: {
-      data: {
+      dataList: {
         type: Array,
         default () {
           return []
@@ -100,7 +109,8 @@
     data () {
       return {
         current: 0,
-        probeType: 3
+        probeType: 3,
+        scrollY: 0
       }
     },
     created () {
@@ -108,9 +118,18 @@
     },
     computed: {
       serialList () {
-        return this.data && this.data.map((group) => {
-          return group.title
+        return this.dataList && this.dataList.map((group) => {
+          return group.title.substring(0, 1)
         })
+      },
+      fixedTitle () {
+        let list = []
+        if (this.dataList) {
+          list = this.dataList.map((group) => {
+            return group.title
+          })
+        }
+        return list[this.current]
       }
     },
     methods: {
@@ -139,6 +158,7 @@
         this.current = Number(serialNum1)
       },
       scrollEvent (pos) {
+        this.scrollY = Math.abs(pos.y)
         this._initListHeight()
         this.$nextTick(() => {
           let y = Math.abs(pos.y)
@@ -164,8 +184,27 @@
         }
       }
     },
+    watch: {
+      'scrollY' (n, o) {
+        let nextTitle = this.$refs.listGroup.getElementsByClassName('list-group-title-hook')[this.current + 1]
+        if (!nextTitle) {
+          return
+        }
+        let pos1 = nextTitle.getBoundingClientRect().top
+        let fixedTag = this.$refs.fixedTitleTag
+        let dis = pos1 - FIXEDTITLE_TOP
+        if (dis < 0) {
+          fixedTag.style.transform = 'translate3d(0, 0, 0)'
+          return
+        }
+        if (dis <= FIXEDTITLE_H) {
+          fixedTag.style.transform = `translate3d(0, -${FIXEDTITLE_H - dis}px, 0)`
+        }
+      }
+    },
     components: {
-      scroll
+      scroll,
+      loading
     }
   }
 </script>
