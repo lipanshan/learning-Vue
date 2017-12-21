@@ -9,7 +9,7 @@
     </div>
     <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
     <div ref="bgLayer" class="bg-layer"></div>
-    <scroll v-if="list" :list="list" :class="{'overflowhidden': switchShow}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
+    <scroll v-if="list" :list="list" :class="{'overflowHidden': switchClass}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
       <song-list :list="list"></song-list>
     </scroll>
   </div>
@@ -27,7 +27,7 @@
     right: 0
     background: $color-background
     .back
-      position absolute
+      position: absolute
       top: 0
       left: 6px
       z-index: 50
@@ -45,6 +45,7 @@
       line-height: 40px
       font-size: $font-size-large
       color: $color-text
+      z-index: 50
       @include no-wrap
     .bg-image
       position: relative
@@ -90,11 +91,11 @@
       background: $color-background
     .list
       position: fixed
-      top: 0
+      top: 40px
       bottom: 0
       width: 100%
       background: $color-background
-      &.overflowhidden
+      &.overflowHidden
         overflow: hidden
       .song-list-wrapper
         padding: 20px 30px
@@ -108,6 +109,7 @@
   import scroll from 'base/scroll'
   import songList from 'base/song-list'
   import loading from 'base/loading'
+  const TOP_LEN = 40
   export default {
     props: {
       list: {
@@ -130,7 +132,7 @@
         probeType: 3,
         scrollYMax: 0,
         scrollY: 0,
-        switchShow: true
+        switchClass: true
       }
     },
     computed: {
@@ -138,17 +140,33 @@
         return `background-image: url(${this.bgImage})`
       },
       calculateListTop () {
-        this.scrollYMax = this.$refs.bgImageTag ? (this.$refs.bgImageTag.clientHeight + 40) : 0
-        return this.$refs.bgImageTag && `top: ${this.$refs.bgImageTag.clientHeight + 40}px`
+        this.scrollYMax = this.$refs.bgImageTag ? (this.$refs.bgImageTag.clientHeight - TOP_LEN) : 0
+        return this.$refs.bgImageTag && `top: ${this.$refs.bgImageTag.clientHeight}px`
       }
     },
     watch: {
-      'scrollY' (n) {
-        if (!this.scrollYMax || n > 0) {
-          this.switchShow = true
-          return
+      'scrollY' (pos) {
+        let y = Math.max(pos, -this.scrollYMax)
+        this.$refs.bgLayer.style.transform = `translate3d(0, ${y}px, 0)`
+        this.$refs.bgLayer.style.WebkitTransform = `translate3d(0, ${y}px, 0)`
+        this.switchClass = pos > 0
+        if (pos < -this.scrollYMax) {
+          this.$refs.bgImageTag.style.zIndex = 10
+          this.$refs.bgImageTag.style.paddingTop = `${TOP_LEN}px`
+        } else {
+          if (pos > 0) {
+            let h = pos + this.scrollYMax
+            let percent = 1 + pos / (pos + this.scrollYMax)
+            console.log(percent, pos)
+            this.$refs.bgImageTag.style.transform = `scaleY(${percent})`
+            this.$refs.bgImageTag.style.paddingTop = `${Math.floor(h * percent)}px`
+            this.$refs.bgImageTag.style.zIndex = 10
+          } else {
+            this.$refs.bgImageTag.style.paddingTop = '70%'
+            this.$refs.bgImageTag.style.transform = 'scaleY(1)'
+            this.$refs.bgImageTag.style.zIndex = 0
+          }
         }
-        this.switchShow = false
       }
     },
     methods: {
@@ -158,11 +176,7 @@
         })
       },
       listenScroll (pos) {
-        if (pos.y >= 0) {
-          return
-        }
-        this.scrollY = this.scrollYMax ? Math.max(pos.y, -this.scrollYMax) : Math.abs(pos.y)
-        this.$refs.bgLayer.style.transform = `translate3d(0, ${this.scrollY}px, 0)`
+        this.scrollY = pos.y
       }
     },
     components: {
