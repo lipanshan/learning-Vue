@@ -4,7 +4,7 @@
       <li v-for="(group, key) in dataList" class="list-group list-group-hook">
         <h2 :data-index="key"  class="list-group-title list-group-title-hook">{{group.title}}</h2>
         <ul>
-          <li v-for="item in group.item" class="list-group-item">
+          <li @click="selectSinger(item)" v-for="item in group.item" class="list-group-item">
             <img v-lazy="item.avatar" alt="头像" class="avatar">
             <span class="name">{{item.name}}</span>
           </li>
@@ -182,6 +182,9 @@
           h += liHeight
           this.listHeight.push(h)
         }
+      },
+      selectSinger (singer) {
+        this.$emit('select', singer)
       }
     },
     watch: {

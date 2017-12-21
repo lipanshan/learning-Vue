@@ -1,6 +1,8 @@
 <template>
     <div class="loading-wrap">
+      <div class="img-wrap">
       <img src="src/common/image/loading.gif" alt="">
+      </div>
       <p class="loading-txt">{{text}}</p>
     </div>
 </template>
@@ -8,19 +10,17 @@
   .loading-wrap
     position: relative
     width: 100%
-    &>img
-      position: absolute
-      top: 0
-      left: 50%
-      display: block
-      width: 20px
-      height: 20px
-      transform: translate(-50%, 0)
+    .img-wrap
+      font-size: 0
+      text-align: center
+      &>img
+        display: inline-block
+        margin-top: 20px
+        vertical-algin: top
+        width: 20px
+        height: 20px
     .loading-txt
-      position: absolute
-      top: 30px
-      left: 0
-      width: 100%
+      margin-top: 20px
       font-size: 14px
       line-heihgt: 20px
       color: #ffffff

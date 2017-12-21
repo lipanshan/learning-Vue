@@ -1,6 +1,7 @@
 <template>
     <div class="singer">
-      <list-view :dataList="singList"></list-view>
+      <list-view @select="selectSinger" :dataList="singList"></list-view>
+      <router-view ></router-view>
     </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -14,6 +15,7 @@
 <script type="text/ecmascript-6">
   import {getSingerList} from 'api/singer'
   import listView from 'base/listview'
+  import {mapMutations} from 'vuex'
   const ERROR_OK = 0
   const HOT_NAME = '热门'
   const HOT_NUM = 10
@@ -46,7 +48,7 @@
           if (value.Fsort < HOT_NUM) {
             hotGroup.item.push({
               title: value.Findex,
-              id: value.Fsinger_id,
+              id: value.Fsinger_mid,
               name: value.Fsinger_name,
               avatar: `http://y.gtimg.cn/music/photo_new/T001R150x150M000${value.Fsinger_mid}.jpg?max_age=2592000`
             })
@@ -59,7 +61,7 @@
           } else {
             serialGroup[value.Findex].item.push({
               title: value.Findex,
-              id: value.Fsinger_id,
+              id: value.Fsinger_mid,
               name: value.Fsinger_name,
               avatar: `http://y.gtimg.cn/music/photo_new/T001R150x150M000${value.Fsinger_mid}.jpg?max_age=2592000`
             })
@@ -75,7 +77,16 @@
         })
         result.unshift(hotGroup)
         return result
-      }
+      },
+      selectSinger (singer) {
+        this.$router.push({
+          path: `/singer/id=${singer.id}`
+        })
+        this.setSinger(singer)
+      },
+      ...mapMutations({
+        setSinger: 'SET_SINGER'
+      })
     },
     components: {
       listView
