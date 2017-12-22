@@ -16,7 +16,7 @@
     <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
     <div ref="bgLayer" class="bg-layer"></div>
     <scroll v-if="list" :list="list" :class="{'overflowHidden': switchClass}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
-      <song-list :list="list"></song-list>
+      <song-list :list="list" @select="selectItem"></song-list>
     </scroll>
   </div>
 </template>
@@ -117,6 +117,8 @@
   import songList from 'base/song-list'
   import loading from 'base/loading'
   import {prefixStyle} from 'common/js/dom'
+  import {mapActions} from 'vuex'
+
   const transform = prefixStyle('transform')
   const backdrop = prefixStyle('backdrop-filter')
   const TOP_LEN = 40
@@ -186,13 +188,21 @@
     },
     methods: {
       back () {
-        this.$router.push({
-          path: '/singer'
-        })
+        this.$router.back()
       },
       listenScroll (pos) {
         this.scrollY = pos.y
-      }
+      },
+      selectItem (item, index) {
+        this.selectPlayer({
+          list: this.list,
+          index,
+          currentSong: item
+        })
+      },
+      ...mapActions([
+        'selectPlayer'
+      ])
     },
     components: {
       songList,
