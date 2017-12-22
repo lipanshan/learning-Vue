@@ -155,11 +155,8 @@
           this.$refs.bgImageTag.style.paddingTop = `${TOP_LEN}px`
         } else {
           if (pos > 0) {
-            let h = pos + this.scrollYMax
             let percent = 1 + pos / (pos + this.scrollYMax)
-            console.log(percent, pos)
             this.$refs.bgImageTag.style.transform = `scaleY(${percent})`
-            this.$refs.bgImageTag.style.paddingTop = `${Math.floor(h * percent)}px`
             this.$refs.bgImageTag.style.zIndex = 10
           } else {
             this.$refs.bgImageTag.style.paddingTop = '70%'
