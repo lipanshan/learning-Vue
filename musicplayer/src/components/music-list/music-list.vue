@@ -5,7 +5,13 @@
     </div>
     <h1 class="title" v-html="title"></h1>
     <div ref="bgImageTag" class="bg-image" :style="backgroundImage">
-      <div class="filter"></div>
+      <div ref="fliterTag" class="filter"></div>
+      <div v-show="playBtn && list && list.length" class="play-wrapper">
+        <div class="play">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
+        </div>
+      </div>
     </div>
     <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
     <div ref="bgLayer" class="bg-layer"></div>
@@ -54,37 +60,38 @@
       padding-top: 70%
       transform-origin: top
       background-size: cover
-    .play-wrapper
-      position: absolute
-      bottom: 20px
-      z-index: 50
-      width: 100%
-      .play
-        box-sizing: border-box
-        width: 135px
-        padding: 7px 0
-        margin: 0 auto
-        text-align: center
-        border: 1px solid $color-theme
-        color: $color-theme
-        border-radius: 100px
-        font-size: 0
-        .icon-play
-          display: inline-block
-          vertical-align: middle
-          margin-right: 6px
-          font-size: $font-size-medium-x
-          .text
-            display: inline-block
-            vertical-align: middle
-            font-size: $font-size-small
       .filter
+        display: none
         position: absolute
         top: 0
         left: 0
         width: 100%
         height: 100%
-        background: rgba(7, 17, 27, 0.4)
+        background: rgba(255, 255, 255, 0.4)
+      .play-wrapper
+        position: absolute
+        bottom: 20px
+        z-index: 50
+        width: 100%
+        .play
+          box-sizing: border-box
+          width: 135px
+          padding: 7px 0
+          margin: 0 auto
+          text-align: center
+          border: 1px solid $color-theme
+          color: $color-theme
+          border-radius: 100px
+          font-size: 0
+          .icon-play
+            display: inline-block
+            vertical-align: middle
+            margin-right: 6px
+            font-size: $font-size-medium-x
+          .text
+            display: inline-block
+            vertical-align: middle
+            font-size: $font-size-small
     .bg-layer
       position: relative
       height: 100%
@@ -109,7 +116,12 @@
   import scroll from 'base/scroll'
   import songList from 'base/song-list'
   import loading from 'base/loading'
+  import {prefixStyle} from 'common/js/dom'
+  const transform = prefixStyle('transform')
+  const backdrop = prefixStyle('backdrop-filter')
   const TOP_LEN = 40
+  const IMG_HEIGHT = 70
+  const BLUR_MAX_VAL = 250
   export default {
     props: {
       list: {
@@ -132,7 +144,8 @@
         probeType: 3,
         scrollYMax: 0,
         scrollY: 0,
-        switchClass: true
+        switchClass: true,
+        playBtn: true
       }
     },
     computed: {
@@ -147,21 +160,26 @@
     watch: {
       'scrollY' (pos) {
         let y = Math.max(pos, -this.scrollYMax)
-        this.$refs.bgLayer.style.transform = `translate3d(0, ${y}px, 0)`
-        this.$refs.bgLayer.style.WebkitTransform = `translate3d(0, ${y}px, 0)`
+        this.$refs.bgLayer.style[transform] = `translate3d(0, ${y}px, 0)`
         this.switchClass = pos > 0
         if (pos < -this.scrollYMax) {
           this.$refs.bgImageTag.style.zIndex = 10
           this.$refs.bgImageTag.style.paddingTop = `${TOP_LEN}px`
+          this.playBtn = false
         } else {
-          if (pos > 0) {
+          this.playBtn = true
+          if (pos > 3) {
             let percent = 1 + pos / (pos + this.scrollYMax)
-            this.$refs.bgImageTag.style.transform = `scaleY(${percent})`
+            this.$refs.bgImageTag.style[transform] = `scaleY(${percent})`
             this.$refs.bgImageTag.style.zIndex = 10
+            this.$refs.fliterTag.style.display = 'block'
+            this.$refs.fliterTag.style[backdrop] = `blur(${Math.max(BLUR_MAX_VAL, pos)}px)`
           } else {
-            this.$refs.bgImageTag.style.paddingTop = '70%'
+            this.$refs.bgImageTag.style.paddingTop = `${IMG_HEIGHT}%`
             this.$refs.bgImageTag.style.transform = 'scaleY(1)'
             this.$refs.bgImageTag.style.zIndex = 0
+            this.$refs.fliterTag.style[backdrop] = 'blur(0)'
+            this.$refs.fliterTag.style.display = 'none'
           }
         }
       }

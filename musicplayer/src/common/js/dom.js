@@ -19,3 +19,28 @@ export function removeClass (el, className) {
   arr[1] = arr[1].trim()
   el.className = arr.join('')
 }
+let elemStyle = document.createElement('div').style
+let vender = (() => {
+  let transformNames = {
+    webkit: 'webkitTransform',
+    ms: 'msTransform',
+    o: 'oTransform',
+    moz: 'mozTransform',
+    stander: 'stander'
+  }
+  for (let key in transformNames) {
+    if (elemStyle[transformNames[key]] !== undefined) {
+      return key
+    }
+    return false
+  }
+})()
+export function prefixStyle (str) {
+  if (!vender) {
+    return
+  }
+  if (vender === 'stander') {
+    return str
+  }
+  return vender + str.charAt(0).toUpperCase() + str.substring(1)
+}
