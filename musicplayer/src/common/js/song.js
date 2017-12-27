@@ -1,5 +1,5 @@
 export default class Song {
-  constructor ({id, mid, singer, name, album, duration, image}) {
+  constructor ({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
     this.mid = mid
     this.singer = singer
@@ -7,16 +7,28 @@ export default class Song {
     this.album = album
     this.duration = duration
     this.image = image
+    this.url = url
   }
 }
-export function createSong (musicData, singer) {
+export function createSong (musicData) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
-    singer: singer,
+    singer: singers(musicData.singer),
     name: musicData.songname,
     album: musicData.albumname,
     duration: musicData.interval,
-    image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`
+    image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
+    url: musicData.strMediaMid
   })
+}
+function singers (arr) {
+  if (!arr.length) {
+    return ''
+  }
+  let str = ''
+  arr.forEach((value) => {
+    str += `| ${value.name} `
+  })
+  return str.substring(1)
 }

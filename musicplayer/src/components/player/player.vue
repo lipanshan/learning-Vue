@@ -1,6 +1,10 @@
 <template>
  <div class="player" v-show="playList.length">
-   <transition name="normal">
+   <transition name="normal"
+               @enter="enter"
+               @after-enter="afterEnter"
+               @leave="leave"
+               @after-leave="afterLeave">
      <div class="normal-player" v-show="fullScreen">
        <div class="background">
          <img width="100%" height="100%" :src="currentSong.image" >
@@ -14,8 +18,8 @@
        </div>
        <div class="middle">
          <div class="middle-l">
-           <div class="cd-wrapper" >
-             <div class="cd">
+           <div class="cd-wrapper" ref="cdImageWrapper">
+             <div class="cd" :class="cdClass" >
                <img class="image" :src="currentSong.image">
              </div>
            </div>
@@ -43,8 +47,8 @@
            <div class="icon i-left" >
              <i class="icon-prev"></i>
            </div>
-           <div class="icon i-center">
-             <i  class="icon-pause"></i>
+           <div class="icon i-center" @click.stop="togglePlay">
+             <i  :class="playIcon"></i>
            </div>
            <div class="icon i-right" >
              <i  class="icon-next"></i>
@@ -58,19 +62,22 @@
    </transition>
    <transition name="mini">
      <div v-show="!fullScreen" @click="fullScreenChange" class="mini-player">
-      <div class="icon">
-        <img :src="currentSong.image" width="40" height="40" alt="">
+      <div class="icon" ref="miniImageWrapper">
+        <img :src="currentSong.image" :class="{'play': playing, 'pause': !playing}" width="40" height="40" alt="">
       </div>
        <div class="text">
          <h2 class="name" v-html="currentSong.name"></h2>
          <p class="desc" v-html="currentSong.singer"></p>
        </div>
-       <div class="control"></div>
+       <div class="control">
+         <i :class="miniPlayIcon" @click.stop="togglePlay"></i>
+       </div>
        <div class="control" @click.stop="showPlayList">
          <i class="icon-playlist"></i>
        </div>
      </div>
    </transition>
+   <audio ref="audioTag" :src="currentSongUrl"></audio>
  </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -149,7 +156,7 @@
               border: 10px solid rgba(255, 255, 255, 0.1)
               border-radius: 50%
               &.play
-                animation: rotate 20s linear infinite
+                animation: rotate 20s linear infinite forwards
               &.pause
                 animation-play-state: paused
               .image
@@ -245,16 +252,16 @@
           text-align: left
         .icon-favorite
           color: $color-sub-theme
-      &.normal-enter-active, &.normal-leave-active
-        transition: all 0.4s
-        .top, .bottom
-          transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32)
-      &.normal-enter, &.normal-leave-to
-        opacity: 0
-        .top
-          transform: translate3d(0, -100px, 0)
-        .bottom
-          transform: translate3d(0, 100px, 0)
+    &.normal-enter-active, &.normal-leave-active
+      transition: all 0.4s
+      .top, .bottom
+        transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32)
+    &.normal-enter, &.normal-leave-to
+      opacity: 0
+      .top
+        transform: translate3d(0, -100px, 0)
+      .bottom
+        transform: translate3d(0, 100px, 0)
   .mini-player
     display: flex
     align-items: center
@@ -275,10 +282,10 @@
       padding: 0 10px 0 20px
       img
         border-radius: 50%
-      &.play
-        animation: rotate 10s linear infinite
-      &.pause
-        animation-play-state: paused
+        &.play
+          animation: rotate 10s linear infinite
+        &.pause
+          animation-play-state: paused
     .text
       display: flex
       flex-direction: column
@@ -288,7 +295,7 @@
       overflow: hidden
       .name
         margin-bottom: 2px
-        no-wrap()
+        @include no-wrap()
         font-size: $font-size-medium
         color: $color-text
       .desc
@@ -316,10 +323,19 @@
 </style>
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations} from 'vuex'
+  import animations from 'create-keyframe-animation'
+  import {getSongPlayUrl} from 'api/singer'
+  import {prefixStyle} from 'common/js/dom'
+  const animation = prefixStyle('animation')
+  const transform = prefixStyle('transform')
+  const transition = prefixStyle('transition')
+  const ERROR_NO = 0
 
   export default {
     data () {
-      return {}
+      return {
+        currentSongUrl: null
+      }
     },
     computed: {
       ...mapGetters([
@@ -327,7 +343,35 @@
         'fullScreen',
         'playList',
         'currentSong'
-      ])
+      ]),
+      cdClass () {
+        return this.playing ? 'play' : 'pause'
+      },
+      playIcon () {
+        return this.playing ? 'icon-pause' : 'icon-play'
+      },
+      miniPlayIcon () {
+        return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      }
+    },
+    watch: {
+      'currentSong' (n, o) {
+        if (!n || !n.url) { return false }
+        getSongPlayUrl(n.url).then((res) => {
+          if (res.code === ERROR_NO) {
+            this.currentSongUrl = `http://dl.stream.qqmusic.qq.com/${res.data.items[0].filename}?vkey=${res.data.items[0].vkey}&guid=541193902&uin=0&fromtag=66`
+            this.$nextTick(() => {
+              this.$refs.audioTag.play()
+            })
+          }
+        })
+      },
+      playing (newPlaying) {
+        this.$nextTick(() => {
+          const audio = this.$refs.audioTag
+          newPlaying ? audio.play() : audio.pause()
+        })
+      }
     },
     methods: {
       back () {
@@ -339,8 +383,63 @@
       showPlayList () {
         console.log('显示播放列表')
       },
+      enter (el, done) {
+        const {x, y, scale} = this._initMovePos()
+        let animation = {
+          0: {
+            transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+          },
+          60: {
+            transform: `translate3d(0, 0, 0) scale(1.2)`
+          },
+          100: {
+            transform: `translate3d(0, 0, 0) scale(1)`
+          }
+        }
+        animations.registerAnimation({
+          name: 'move',
+          animation,
+          presets: {
+            duration: 400,
+            easing: 'linear'
+          }
+        })
+        animations.runAnimation(this.$refs.cdImageWrapper, 'move', done)
+      },
+      afterEnter () {
+        animations.unregisterAnimation('move')
+        this.$refs.cdImageWrapper.style[animation] = ''
+      },
+      leave (el, done) {
+        const {x, y, scale} = this._initMovePos()
+        this.$refs.cdImageWrapper.style[transition] = 'all 0.4s linear'
+        this.$refs.cdImageWrapper.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+        this.$refs.cdImageWrapper.addEventListener('transitionend', done)
+      },
+      afterLeave () {
+        this.$refs.cdImageWrapper.style[transition] = ''
+        this.$refs.cdImageWrapper.style[transform] = ''
+      },
+      _initMovePos () {
+        const width = 40
+        const offsetLeft = 20
+        const bottom = 10
+        const cdWidth = window.innerWidth * 0.8
+        const cdTop = 80
+        return {
+          x: -(window.innerWidth / 2 - (width / 2 + offsetLeft)),
+          y: window.innerHeight - cdTop - cdWidth / 2 - width / 2 - bottom,
+          scale: width / cdWidth
+        }
+      },
+      togglePlay () {
+        this.$nextTick(() => {
+          this.setPlaying(!this.playing)
+        })
+      },
       ...mapMutations({
-        setFullScreen: 'SET_FULLSCREEM'
+        setFullScreen: 'SET_FULLSCREEM',
+        setPlaying: 'SET_PLAYING'
       })
     }
   }

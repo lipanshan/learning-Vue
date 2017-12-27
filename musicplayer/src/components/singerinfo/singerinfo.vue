@@ -45,14 +45,14 @@
         }
         getSingerInfo(this.singer.id).then((res) => {
           if (res.code === ERROR_OK) {
-            this.singerInfoData = this._normalizeSongerInfoData(res.data.list, res.data.singer_name)
+            this.singerInfoData = this._normalizeSongerInfoData(res.data.list)
           }
         })
       },
-      _normalizeSongerInfoData (list, singer) {
+      _normalizeSongerInfoData (list) {
         let arr = []
         list.forEach((value, index) => {
-          arr.push(createSong(value.musicData, singer))
+          arr.push(createSong(value.musicData))
         })
         return arr
       }
