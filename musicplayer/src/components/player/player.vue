@@ -34,23 +34,23 @@
            <span class="dot"></span>
          </div>
          <div class="progress-wrapper">
-           <span class="time time-l"></span>
+           <span class="time time-l">{{_formatSongTime(currentTime)}}</span>
            <div class="progress-bar-wrapper">
-
+              <progress-bar @triggerProgressChange="triggerProgressChange" :percent="percent"></progress-bar>
            </div>
-           <span class="time time-r"></span>
+           <span class="time time-r">{{_formatSongTime(songAllTime)}}</span>
          </div>
          <div class="operators">
            <div class="icon i-left">
              <i class="icon-loop"></i>
            </div>
-           <div class="icon i-left" >
+           <div @click.stop="prev" class="icon i-left" >
              <i class="icon-prev"></i>
            </div>
            <div class="icon i-center" @click.stop="togglePlay">
              <i  :class="playIcon"></i>
            </div>
-           <div class="icon i-right" >
+           <div @click.stop="next" class="icon i-right" >
              <i  class="icon-next"></i>
            </div>
            <div class="icon i-right">
@@ -63,21 +63,24 @@
    <transition name="mini">
      <div v-show="!fullScreen" @click="fullScreenChange" class="mini-player">
       <div class="icon" ref="miniImageWrapper">
-        <img :src="currentSong.image" :class="{'play': playing, 'pause': !playing}" width="40" height="40" alt="">
+        <img :src="currentSong.image" :class="cdClass" width="40" height="40" alt="">
       </div>
        <div class="text">
          <h2 class="name" v-html="currentSong.name"></h2>
          <p class="desc" v-html="currentSong.singer"></p>
        </div>
-       <div class="control">
-         <i :class="miniPlayIcon" @click.stop="togglePlay"></i>
+       <div class="control" @click.stop="togglePlay">
+         <circle-progress :percent="percent"><i :class="miniPlayIcon" ></i></circle-progress>
        </div>
        <div class="control" @click.stop="showPlayList">
          <i class="icon-playlist"></i>
        </div>
      </div>
    </transition>
-   <audio ref="audioTag" :src="currentSongUrl"></audio>
+   <audio ref="audioTag" :src="currentSongUrl" @canplay="ready" @timeupdate="updateTime" @error="audioError">
+     <source :src="currentSongUrl" type="audio/ogg">
+     <source :src="currentSongUrl" type="audio/mpeg">
+   </audio>
  </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -225,10 +228,10 @@
             flex: 0 0 30px
             line-height: 30px
             width: 30px
-          &.time-l
-            text-align: left
-          &.time-r
-            text-align: right
+            &.time-l
+              text-align: left
+            &.time-r
+              text-align: right
           .progress-bar-wrapper
             flex: 1
         .operators
@@ -283,7 +286,7 @@
       img
         border-radius: 50%
         &.play
-          animation: rotate 10s linear infinite
+          animation: rotate 10s linear infinite forwards
         &.pause
           animation-play-state: paused
     .text
@@ -326,6 +329,8 @@
   import animations from 'create-keyframe-animation'
   import {getSongPlayUrl} from 'api/singer'
   import {prefixStyle} from 'common/js/dom'
+  import progressBar from 'base/progress-bar'
+  import circleProgress from 'base/circle-progress'
   const animation = prefixStyle('animation')
   const transform = prefixStyle('transform')
   const transition = prefixStyle('transition')
@@ -334,7 +339,9 @@
   export default {
     data () {
       return {
-        currentSongUrl: null
+        currentSongUrl: null,
+        songReady: false,
+        currentTime: 0
       }
     },
     computed: {
@@ -342,22 +349,30 @@
         'playing',
         'fullScreen',
         'playList',
-        'currentSong'
+        'currentSong',
+        'currentIndex'
       ]),
       cdClass () {
-        return this.playing ? 'play' : 'pause'
+        return this.playing ? 'play' : 'play pause'
       },
       playIcon () {
         return this.playing ? 'icon-pause' : 'icon-play'
       },
       miniPlayIcon () {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      },
+      songAllTime () {
+        return this.currentSong.duration
+      },
+      percent () {
+        let p = this.currentTime / this.songAllTime
+        return p
       }
     },
     watch: {
       'currentSong' (n, o) {
         if (!n || !n.url) { return false }
-        getSongPlayUrl(n.url).then((res) => {
+        getSongPlayUrl(n.mid, n.url).then((res) => {
           if (res.code === ERROR_NO) {
             this.currentSongUrl = `http://dl.stream.qqmusic.qq.com/${res.data.items[0].filename}?vkey=${res.data.items[0].vkey}&guid=541193902&uin=0&fromtag=66`
             this.$nextTick(() => {
@@ -367,6 +382,9 @@
         })
       },
       playing (newPlaying) {
+        if (!this.songReady) {
+          return
+        }
         this.$nextTick(() => {
           const audio = this.$refs.audioTag
           newPlaying ? audio.play() : audio.pause()
@@ -420,6 +438,55 @@
         this.$refs.cdImageWrapper.style[transition] = ''
         this.$refs.cdImageWrapper.style[transform] = ''
       },
+      next () {
+        if (!this.songReady) {
+          return false
+        }
+        let index = this.currentIndex + 1
+        if (index >= this.playList.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        this.$nextTick(() => {
+          this.setPlaying(true)
+        })
+        this.songReady = false
+      },
+      prev () {
+        if (!this.songReady) {
+          return false
+        }
+        let index = this.currentIndex - 1
+        if (index < 0) {
+          index = this.playList.length - 1
+        }
+        this.setCurrentIndex(index)
+        this.$nextTick(() => {
+          this.setPlaying(true)
+        })
+        this.songReady = false
+      },
+      togglePlay () {
+        this.setPlaying(!this.playing)
+      },
+      ready () {
+        this.songReady = true
+      },
+      audioError (msg) {
+        this.songReady = true
+      },
+      updateTime (e) {
+        this.currentTime = e.target.currentTime
+      },
+      triggerProgressChange (percent) {
+        this.$refs.audioTag.currentTime = percent * this.songAllTime
+        this.setPlaying(true)
+      },
+      _formatSongTime (t) {
+        let m = Math.floor(t / 60)
+        let s = Math.floor(t % 60)
+        return m + ':' + s
+      },
       _initMovePos () {
         const width = 40
         const offsetLeft = 20
@@ -432,15 +499,15 @@
           scale: width / cdWidth
         }
       },
-      togglePlay () {
-        this.$nextTick(() => {
-          this.setPlaying(!this.playing)
-        })
-      },
       ...mapMutations({
         setFullScreen: 'SET_FULLSCREEM',
-        setPlaying: 'SET_PLAYING'
+        setPlaying: 'SET_PLAYING',
+        setCurrentIndex: 'SET_CURRENTINDEX'
       })
+    },
+    components: {
+      progressBar,
+      circleProgress
     }
   }
 </script>

@@ -37,7 +37,7 @@ export function getSingerInfo (id) {
   const data = Object.assign({}, options, opt)
   return jsonp(urls, data)
 }
-export function getSongPlayUrl (singMid) {
+export function getSongPlayUrl (singMid, songUrl) {
   let urls = '/getVkey'
   const opt = {
     loginUin: 0,
@@ -50,7 +50,7 @@ export function getSongPlayUrl (singMid) {
     cid: 205361747,
     uin: 0,
     songmid: singMid,
-    filename: `C400${singMid}.m4a`,
+    filename: `C400${songUrl}.m4a`,
     guid: '541193902'
   }
   const data = Object.assign({}, options, opt)
