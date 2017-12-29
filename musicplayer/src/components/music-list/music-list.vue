@@ -7,7 +7,7 @@
     <div ref="bgImageTag" class="bg-image" :style="backgroundImage">
       <div ref="fliterTag" class="filter"></div>
       <div v-show="playBtn && list && list.length" class="play-wrapper">
-        <div class="play">
+        <div class="play" @click="randomPlay">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -117,7 +117,7 @@
   import songList from 'base/song-list'
   import loading from 'base/loading'
   import {prefixStyle} from 'common/js/dom'
-  import {mapActions} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
 
   const transform = prefixStyle('transform')
   const backdrop = prefixStyle('backdrop-filter')
@@ -157,7 +157,10 @@
       calculateListTop () {
         this.scrollYMax = this.$refs.bgImageTag ? (this.$refs.bgImageTag.clientHeight - TOP_LEN) : 0
         return this.$refs.bgImageTag && `top: ${this.$refs.bgImageTag.clientHeight}px`
-      }
+      },
+      ...mapGetters([
+        'currentIndex'
+      ])
     },
     watch: {
       'scrollY' (pos) {
@@ -196,12 +199,18 @@
       selectItem (item, index) {
         this.selectPlayer({
           list: this.list,
-          index,
-          currentSong: item
+          index
+        })
+      },
+      randomPlay () {
+        this.randomPlayer({
+          'list': this.list,
+          'index': this.currentIndex
         })
       },
       ...mapActions([
-        'selectPlayer'
+        'selectPlayer',
+        'randomPlayer'
       ])
     },
     components: {

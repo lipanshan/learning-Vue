@@ -24,7 +24,7 @@
              </div>
            </div>
            <div class="playing-lyric-wrapper">
-             <div class="playing-lyric"></div>
+             <div class="playing-lyric">歌词</div>
            </div>
          </div>
        </div>
@@ -42,7 +42,7 @@
          </div>
          <div class="operators">
            <div class="icon i-left">
-             <i class="icon-loop"></i>
+             <i @click.stop="changeMode" :class="playModes"></i>
            </div>
            <div @click.stop="prev" class="icon i-left" >
              <i class="icon-prev"></i>
@@ -77,7 +77,7 @@
        </div>
      </div>
    </transition>
-   <audio ref="audioTag" :src="currentSongUrl" @canplay="ready" @timeupdate="updateTime" @error="audioError">
+   <audio ref="audioTag" :src="currentSongUrl" @canplay="ready" @timeupdate="updateTime" @ended="playEnd" @error="audioError">
      <source :src="currentSongUrl" type="audio/ogg">
      <source :src="currentSongUrl" type="audio/mpeg">
    </audio>
@@ -327,13 +327,16 @@
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
-  import {getSongPlayUrl} from 'api/singer'
+  import {getSongPlayUrl, getSongLyric} from 'api/singer'
   import {prefixStyle} from 'common/js/dom'
   import progressBar from 'base/progress-bar'
   import circleProgress from 'base/circle-progress'
+  import {playMode} from '../../store/config'
+  import {randowArray, findIndex} from 'common/js/randomarray'
   const animation = prefixStyle('animation')
   const transform = prefixStyle('transform')
   const transition = prefixStyle('transition')
+  const MODE_NUM = 3
   const ERROR_NO = 0
 
   export default {
@@ -341,8 +344,12 @@
       return {
         currentSongUrl: null,
         songReady: false,
-        currentTime: 0
+        currentTime: 0,
+        currentSongLyric: null
       }
+    },
+    created () {
+      this.olPlayList = this.playList
     },
     computed: {
       ...mapGetters([
@@ -350,7 +357,9 @@
         'fullScreen',
         'playList',
         'currentSong',
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        'sequenceList'
       ]),
       cdClass () {
         return this.playing ? 'play' : 'play pause'
@@ -367,17 +376,33 @@
       percent () {
         let p = this.currentTime / this.songAllTime
         return p
+      },
+      playModes () {
+        if (this.mode === playMode.sequence) {
+          return 'icon-sequence'
+        }
+        if (this.mode === playMode.loop) {
+          return 'icon-loop'
+        }
+        if (this.mode === playMode.random) {
+          return 'icon-random'
+        }
       }
     },
     watch: {
       'currentSong' (n, o) {
-        if (!n || !n.url) { return false }
+        if (!n || !n.url || n.id === o.id) { return false }
         getSongPlayUrl(n.mid, n.url).then((res) => {
           if (res.code === ERROR_NO) {
             this.currentSongUrl = `http://dl.stream.qqmusic.qq.com/${res.data.items[0].filename}?vkey=${res.data.items[0].vkey}&guid=541193902&uin=0&fromtag=66`
             this.$nextTick(() => {
               this.$refs.audioTag.play()
             })
+          }
+        })
+        getSongLyric(this.currentSong.mid).then((res) => {
+          if (res.code === ERROR_NO) {
+            this.currentSongLyric = res.lyric
           }
         })
       },
@@ -477,15 +502,43 @@
       },
       updateTime (e) {
         this.currentTime = e.target.currentTime
+        this._formatLyric()
       },
       triggerProgressChange (percent) {
         this.$refs.audioTag.currentTime = percent * this.songAllTime
         this.setPlaying(true)
       },
+      changeMode () {
+        let index = this.mode + 1
+        index = index % MODE_NUM
+        this.setPlayMode(index)
+        let list = null
+        if (this.mode === playMode.random) {
+          list = randowArray(this.sequenceList)
+        } else {
+          list = this.sequenceList
+        }
+        this.setCurrentIndex(findIndex(list, this.currentSong))
+        this.setPlayList(list)
+      },
+      playEnd () {
+        if (this.mode === playMode.loop) {
+          this.loop()
+        } else {
+          this.next()
+        }
+      },
+      loop () {
+        this.$refs.audioTag.currentTime = 0
+        this.$refs.audioTag.play()
+      },
       _formatSongTime (t) {
         let m = Math.floor(t / 60)
         let s = Math.floor(t % 60)
         return m + ':' + s
+      },
+      _formatLyric () {
+        console.log(this.currentSongLyric)
       },
       _initMovePos () {
         const width = 40
@@ -502,7 +555,9 @@
       ...mapMutations({
         setFullScreen: 'SET_FULLSCREEM',
         setPlaying: 'SET_PLAYING',
-        setCurrentIndex: 'SET_CURRENTINDEX'
+        setCurrentIndex: 'SET_CURRENTINDEX',
+        setPlayMode: 'SET_MODE',
+        setPlayList: 'SET_PLAYLIST'
       })
     },
     components: {

@@ -1,7 +1,7 @@
 <template>
     <div class="singer">
       <list-view @select="selectSinger" :dataList="singList"></list-view>
-      <router-view ></router-view>
+      <router-view></router-view>
     </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>

@@ -58,3 +58,22 @@ export function getSongPlayUrl (singMid, songUrl) {
     return Promise.resolve(res.data)
   })
 }
+export function getSongLyric (songmid) {
+  let urls = '/getLyric'
+  let opt = {
+    pcachetime: +new Date(),
+    songmid: songmid,
+    loginUin: 0,
+    hostUin: 0,
+    format: 'jsonp',
+    notice: 0,
+    platform: 'yqq',
+    needNewCode: 0,
+    inCharset: 'utf8'
+  }
+  let data = Object.assign({}, options, opt)
+  return axios.get(urls, {params: data}).then((res) => {
+    console.log(res)
+    return Promise.resolve(res.data)
+  })
+}

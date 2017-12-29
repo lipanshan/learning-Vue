@@ -84,13 +84,15 @@
       },
       progressTouchEnd () {
         this.touch.initTouch = false
-        this.$emit('triggerProgressChange', this.touch.percent)
+        this.$emit('triggerProgressChange', [this.touch.percent])
       },
       progressClick (e) {
-        let maxW = this.$refs.barInner.getBoundingClientRect().width
-        let precent = e.offsetX / maxW
-        this._setProgressPos(precent)
-        this.$emit('triggerProgressChange', precent)
+        let rect = this.$refs.barInner.getBoundingClientRect()
+        let maxW = rect.width
+        let moveX = e.pageX - rect.left
+        let p = moveX / maxW
+        this._setProgressPos(p)
+        this.$emit('triggerProgressChange', [p])
       },
       _setProgressPos (newNum) {
         let maxW = this.$refs.barInner.getBoundingClientRect().width
