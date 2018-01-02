@@ -73,7 +73,8 @@ export function getSongLyric (songmid) {
   }
   let data = Object.assign({}, options, opt)
   return axios.get(urls, {params: data}).then((res) => {
-    console.log(res)
-    return Promise.resolve(res.data)
+    let reg = new RegExp('^MusicJsonCallback\\((.*)\\)$')
+    res.data.match(reg)
+    return Promise.resolve(JSON.parse(RegExp.$1))
   })
 }
