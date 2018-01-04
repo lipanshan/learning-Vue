@@ -1,5 +1,5 @@
 <template>
-  <div class="music-list">
+  <div class="music-list" ref="musicListWrapper">
     <div class="back" @click="back">
       <i class="icon-back"></i>
     </div>
@@ -118,6 +118,7 @@
   import loading from 'base/loading'
   import {prefixStyle} from 'common/js/dom'
   import {mapGetters, mapActions} from 'vuex'
+  import {mixinPlayer} from 'common/js/mixin'
 
   const transform = prefixStyle('transform')
   const backdrop = prefixStyle('backdrop-filter')
@@ -125,6 +126,7 @@
   const IMG_HEIGHT = 70
   const BLUR_MAX_VAL = 250
   export default {
+    mixins: [mixinPlayer],
     props: {
       list: {
         type: Array,
@@ -159,7 +161,8 @@
         return this.$refs.bgImageTag && `top: ${this.$refs.bgImageTag.clientHeight}px`
       },
       ...mapGetters([
-        'currentIndex'
+        'currentIndex',
+        'playList'
       ])
     },
     watch: {
@@ -187,6 +190,11 @@
             this.$refs.fliterTag.style.display = 'none'
           }
         }
+      },
+      'list' (n, o) {
+        this.$nextTick(() => {
+          this.handlePlayingList(this.playList)
+        })
       }
     },
     methods: {
@@ -207,6 +215,13 @@
           'list': this.list,
           'index': this.currentIndex
         })
+      },
+      handlePlayingList (playList) {
+        if (this.$refs.scrollList) {
+          let bottom = playList.length ? '60px' : ''
+          this.$refs.scrollList.$el.style.bottom = bottom
+          this.$refs.scrollList.refresh()
+        }
       },
       ...mapActions([
         'selectPlayer',

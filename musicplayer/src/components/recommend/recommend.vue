@@ -39,7 +39,10 @@
     top: 88px
     bottom: 0
     .recommend-content
-      height: 100%
+      position: absolute
+      width: 100%
+      top: 0
+      bottom: 0
       overflow: hidden
       .slider-wrapper
         position: relative
@@ -91,9 +94,11 @@
   import slider from 'base/slider'
   import scroll from 'base/scroll'
   import loading from 'base/loading'
+  import {mixinPlayer} from 'common/js/mixin'
   const ERROR_OK = 0
 
   export default {
+    mixins: [mixinPlayer],
     data () {
       return {
         sliderList: [],
@@ -106,6 +111,13 @@
       this._getHotRecommend()
     },
     methods: {
+      handlePlayingList (playList) {
+        if (this.$refs.scrollwrap) {
+          let bottom = playList.length ? '60px' : ''
+          this.$refs.scrollwrap.$el.style.bottom = bottom
+          this.$refs.scrollwrap.refresh()
+        }
+      },
       _getRecommondData () {
         recommend().then((res) => {
           if (res.code === ERROR_OK) {

@@ -1,5 +1,6 @@
 <template>
-  <scroll class="list-view" :dataList="dataList" :probeType="probeType" @scrollEvent="scrollEvent" ref="listView">
+  <scroll class="list-view" :dataList="dataList" :probeType="probeType" @scrollEvent="scrollEvent"
+          ref="listView">
     <ul class="list-wrap" ref="listGroup">
       <li v-for="(group, key) in dataList" class="list-group list-group-hook">
         <h2 :data-index="key"  class="list-group-title list-group-title-hook">{{group.title}}</h2>
@@ -28,9 +29,10 @@
   @import "../common/sass/variable"
 
   .list-view
-    position: relative
+    position: absolute
     width: 100%
-    height: 100%
+    top: 0
+    bottom: 0
     overflow: hidden
     background: $color-background
     .list-wrap
@@ -95,9 +97,11 @@
 <script type="text/ecmascript-6">
   import scroll from 'base/scroll'
   import loading from 'base/loading'
+  import {mixinPlayer} from 'common/js/mixin'
   const FIXEDTITLE_H = 30
   const FIXEDTITLE_TOP = 88
   export default {
+    mixins: [mixinPlayer],
     props: {
       dataList: {
         type: Array,
@@ -133,6 +137,13 @@
       }
     },
     methods: {
+      handlePlayingList (playList) {
+        if (this.$refs.listView) {
+          let bottom = playList.length ? '60px' : ''
+          this.$refs.listView.$el.style.bottom = bottom
+          this.$refs.listView.refresh()
+        }
+      },
       onshortcuttouchstart (ev) {
         let ind = ev.touches[0].target.getAttribute('data-index')
         let el = this.$refs.listGroup.getElementsByClassName('list-group-title-hook')[ind]
@@ -153,6 +164,9 @@
         }
       },
       activeElem (elem) {
+        if (!elem || !elem.getAttribute('data-index')) {
+          return
+        }
         let serialNum1 = elem.getAttribute('data-index')
         this.$refs.listView.scrollToElement(elem)
         this.current = Number(serialNum1)

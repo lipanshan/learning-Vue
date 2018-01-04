@@ -64,6 +64,19 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           console.log(e)
         })
       })
+      apiRouter.get('/getRankGroupList', function (req, res) {
+        const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_opt.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/n/yqq/toplist/4.html'
+          },
+          params: req.query
+        }).then((response) => {
+          res.send(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
     },
     clientLogLevel: 'warning',
     historyApiFallback: true,

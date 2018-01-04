@@ -530,6 +530,9 @@
         }
       },
       togglePlay () {
+        if (!this.songReady) {
+          return false
+        }
         this.setPlaying(!this.playing)
         if (this.lyric) {
           this.lyric.togglePlay()
@@ -547,9 +550,6 @@
       updateTime (e) {
         let currentTime = e.target.currentTime
         this.currentTime = currentTime
-        if (this.lyric) {
-          this.lyric.seek(currentTime * 1000)
-        }
       },
       triggerProgressChange (percent) {
         let currentTime = percent * this.songAllTime
