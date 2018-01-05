@@ -1,6 +1,6 @@
 <template>
   <transition name="move" class="rank-song-info">
-    <music-list :list="songList" :title="title" :bgImage="bgImage"></music-list>
+    <music-list :rankIcon="flag" :list="songList" :title="title" :bgImage="bgImage"></music-list>
   </transition>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -21,7 +21,8 @@
     },
     data () {
       return {
-        songList: null
+        songList: null,
+        flag: true
       }
     },
     computed: {
@@ -32,7 +33,7 @@
         return this.singer.ListName
       },
       bgImage () {
-        return this.singer.MacDetailPicUrl
+        return this.singer.pic_v12
       }
     },
     methods: {

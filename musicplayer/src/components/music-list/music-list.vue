@@ -16,7 +16,7 @@
     <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
     <div ref="bgLayer" class="bg-layer"></div>
     <scroll v-if="list" :list="list" :class="{'overflowHidden': switchClass}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
-      <song-list :list="list" @select="selectItem"></song-list>
+      <song-list :rankIconShow="rankIcon" :list="list" @select="selectItem"></song-list>
     </scroll>
   </div>
 </template>
@@ -141,6 +141,10 @@
       bgImage: {
         type: String,
         default: ''
+      },
+      rankIcon: {
+        type: Boolean,
+        default: false
       }
     },
     data () {

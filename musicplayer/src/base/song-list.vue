@@ -2,6 +2,9 @@
   <div class="song-list">
     <ul>
       <li @click="selectItem(item, index)" v-for="(item, index) in list" class="item">
+        <div v-show="rankIconShow" class="rank">
+          <i class="icon" :class="rankIconCss(index)" v-html="rankIconTxt(index)"></i>
+        </div>
         <div class="content">
           <h2 class="name">{{item.name}}</h2>
           <p class="desc">{{getDesc(item)}}</p>
@@ -63,6 +66,10 @@
         default () {
           return []
         }
+      },
+      rankIconShow: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -74,6 +81,13 @@
       },
       selectItem (item, index) {
         this.$emit('select', item, index)
+      },
+      rankIconCss (index) {
+        let str = index <= 2 ? `icon${index}` : 'text'
+        return str
+      },
+      rankIconTxt (index) {
+        return index > 2 ? (index + 1) : ''
       }
     }
   }

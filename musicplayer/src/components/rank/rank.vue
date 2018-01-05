@@ -4,7 +4,7 @@
       <ul>
         <li @click="selectItem(item)" class="item" v-for="item in topList">
           <div class="icon">
-            <img width="100" height="100" v-lazy="item.MacDetailPicUrl"/>
+            <img width="100" height="100" v-lazy="item.pic_v12"/>
           </div>
           <min-song-list :minList="item.songlist"></min-song-list>
         </li>
@@ -59,8 +59,7 @@
       .loading-container
         position: absolute
         width: 100%
-        top: 50%
-        transform: translateY(-50%)
+        top: 44px
 </style>
 <script type="text/ecmascript-6">
   import {rankGroupList} from 'api/rank'

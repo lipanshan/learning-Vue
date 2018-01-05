@@ -8,7 +8,7 @@
     <slot name="loading"></slot>
   </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
+<style lang="sass" type="text/css" rel="stylesheet/sass">
 </style>
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
