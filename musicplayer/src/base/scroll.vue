@@ -46,9 +46,12 @@
         }
         this.scroll = new BScroll(this.$refs.scrollWrapper, {
           probeType: this.probeType,
-          click: this.click
+          click: this.click,
+          pullUpLoad: true
         })
         this.onscroll()
+        this.onScrollEnd()
+        this.onPullingUp()
       },
       refresh () {
         this.scroll && this.scroll.refresh()
@@ -59,6 +62,19 @@
       onscroll () {
         this.scroll.on('scroll', (pos) => {
           this.$emit('scrollEvent', pos)
+        })
+      },
+      finishPullUp () {
+        this.scroll && this.scroll.finishPullUp()
+      },
+      onScrollEnd () {
+        this.scroll.on('scrollEnd', (pos) => {
+          this.$emit('scrollEnd', pos)
+        })
+      },
+      onPullingUp () {
+        this.scroll.on('pullingUp', () => {
+          this.$emit('pullingUp')
         })
       }
     },

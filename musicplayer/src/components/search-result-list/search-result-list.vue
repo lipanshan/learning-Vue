@@ -1,9 +1,12 @@
 <template>
   <div class="search-result-list">
     <scroll :data="list"
-            @
+            @scrollEnd="scrollEnd"
+            @pullingUp="pullingUp"
+            :probeType="3"
+            ref="searchList"
             class="search-list">
-      <li class="search-item" v-for="item in list">
+      <li class="search-item" @click="selectItem(item, index)" v-for="(item, index) in list">
         <div class="icon">
           <i :class="iconType(item)"></i>
         </div>
@@ -11,10 +14,10 @@
           <p class="text" v-html="item.name"></p>
         </div>
       </li>
+      <li class="loading-icon" v-show="addPage">
+        <loading class="loading-content" :text="null"></loading>
+      </li>
     </scroll>
-    <div v-show="!list" class="loading-wrap">
-      <loading></loading>
-    </div>
     <div v-show="list && !list.length" class="no-result-wrapper">
       <no-result title="抱歉，暂无搜索结果"></no-result>
     </div>
@@ -54,6 +57,12 @@
           overflow: hidden
           .text
             @include no-wrap()
+      .loading-icon
+        position: relative
+        display: block
+        .loading-content
+          position: static
+          transform: translate3d(0, 0, 0)
     .no-result-wrapper
       position: absolute
       width: 100%
@@ -63,8 +72,8 @@
 </style>
 <script type="text/ecmascript-6">
   import scroll from 'base/scroll'
-  import loading from 'base/loading'
   import noResult from 'base/no-result'
+  import loading from 'base/loading'
   const TYPE_SONG = 0
   export default {
     props: {
@@ -73,10 +82,15 @@
         default () {
           return []
         }
+      },
+      totalnum: {
+        type: Number,
+        default: 0
       }
     },
     data () {
       return {
+        addPage: false
       }
     },
     methods: {
@@ -86,12 +100,33 @@
         } else {
           return 'icon-mine'
         }
+      },
+      scrollEnd () {
+        if (this.totalnum !== 0 && this.list.length >= this.totalnum) {
+          return false
+        } else {
+          this.addPage = true
+          this.$refs.searchList.refresh()
+        }
+      },
+      pullingUp () {
+        this.$emit('pullingUpFn')
+      },
+      selectItem (item, ind) {
+        this.$emit('selectedItem', item, ind)
+      },
+      closeLoadingIcon () {
+        this.addPage = false
+      },
+      finishPullUpFn () {
+        this.$refs.searchList.finishPullUp()
+        this.$refs.searchList.refresh()
       }
     },
     components: {
       scroll,
-      loading,
-      noResult
+      noResult,
+      loading
     }
   }
 </script>

@@ -1,7 +1,7 @@
 import jsonp from 'common/js/jsonp'
 import {options} from 'common/js/options'
 
-export function getQueryInfo (txt) {
+export function getQueryInfo (song) {
   const url = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp'
   const opt = {
     ct: 24,
@@ -15,9 +15,9 @@ export function getQueryInfo (txt) {
     catZhida: 1,
     lossless: 0,
     flag_qc: 0,
-    p: 1,
-    n: 20,
-    w: txt,
+    p: song.curPage,
+    n: song.curNum,
+    w: song.searchTxt,
     loginUin: 0,
     hostUin: 0,
     format: 'jsonp',

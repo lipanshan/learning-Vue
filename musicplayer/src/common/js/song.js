@@ -22,6 +22,18 @@ export function createSong (musicData) {
     url: musicData.strMediaMid
   })
 }
+export function searchCreateSong (musicData) {
+  return new Song({
+    id: musicData.id,
+    mid: musicData.mid,
+    singer: singers(musicData.singer),
+    name: musicData.name,
+    album: musicData.album.name,
+    duration: musicData.interval,
+    image: `http://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.album.mid}.jpg?max_age=2592000`,
+    url: musicData.file.strMediaMid
+  })
+}
 function singers (arr) {
   if (!arr.length) {
     return ''

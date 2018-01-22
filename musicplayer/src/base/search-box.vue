@@ -1,7 +1,7 @@
 <template>
-  <a class="search-box" :class="{'focus': focusStatus}">
-    <i @click="seek" class="icon-search"></i>
-    <input ref="searchTag" @input.lazy="query" @blur="_blur" @focus="_focus" v-model="search" class="box box-hook" :placeholder="placeholder"/>
+  <a class="search-box" @click="_focus" :class="{'focus': focusStatus}">
+    <i class="icon-search"></i>
+    <input ref="searchTag" @input.lazy="query" @blur="_blur"v-model="search" class="box box-hook" :placeholder="placeholder"/>
     <i @click="clear" v-show="search" class="icon-dismiss"></i>
   </a>
 </template>
@@ -43,12 +43,21 @@
       placeholder: {
         type: String,
         default: '搜索歌曲、歌手'
+      },
+      searchWord: {
+        type: String,
+        default: ''
       }
     },
     data () {
       return {
-        search: '',
-        focusStatus: false
+        focusStatus: false,
+        search: ''
+      }
+    },
+    watch: {
+      searchWord (n, o) {
+        this.search = n
       }
     },
     methods: {
@@ -56,22 +65,14 @@
         this.search = ''
         this.$emit('clearFn')
       },
-      blur () {
-        this.$refs.searchTag.blur()
-      },
-      focus () {
-        this.$refs.searchTag.focus()
-      },
       query () {
         this.$emit('queryFn', this.search)
-      },
-      seek () {
-        this.$emit('searchFn', this.search)
       },
       _blur () {
         this.focusStatus = false
       },
       _focus () {
+        this.$refs.searchTag.focus()
         this.focusStatus = true
       }
     }

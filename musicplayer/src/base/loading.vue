@@ -13,6 +13,7 @@
     .img-wrap
       font-size: 0
       text-align: center
+      padding-bottom: 20px
       &>img
         display: inline-block
         margin-top: 20px
@@ -20,7 +21,6 @@
         width: 20px
         height: 20px
     .loading-txt
-      margin-top: 20px
       font-size: 14px
       line-heihgt: 20px
       color: #ffffff
