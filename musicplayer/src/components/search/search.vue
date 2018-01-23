@@ -20,7 +20,7 @@
           <div class="search-history">
             <h1 class="title">
               <span  class="text">搜索历史</span>
-              <span @click.stop="clearSearchHistory" class="clear">
+              <span @click.stop="showConfirm" class="clear">
                 <i class="icon-clear"></i>
               </span>
             </h1>
@@ -35,7 +35,7 @@
         <loading></loading>
       </div>
     </div>
-    <!--<confirm ref="confirm" @confirm="clearSearchHistory" text="是否清空所有搜索历史" confirmBtnText="清空"></confirm>-->
+    <confirm ref="confirm" @clearHistory="clearSearchHistory" text="是否清空所有搜索历史" confirmSure="清空"></confirm>
     <router-view></router-view>
   </div>
 </template>
@@ -112,6 +112,7 @@
   import {mapGetters, mapActions} from 'vuex'
   import {searchCreateSong} from 'common/js/song'
   import {mixinPlayer} from 'common/js/mixin'
+  import confirm from 'base/confirm'
   const ERROR_NUM = 0
   export default {
     mixins: [mixinPlayer],
@@ -226,6 +227,12 @@
         storage.remove('_song_')
         this.searchHistoryList = []
       },
+      showConfirm () {
+        if (!this.searchHistoryList.length) {
+          return false
+        }
+        this.$refs.confirm.show()
+      },
       _addPageFn () {
         if (!this.flag) {
           return false
@@ -290,7 +297,8 @@
       scroll,
       loading,
       searchList,
-      historyList
+      historyList,
+      confirm
     }
   }
 </script>

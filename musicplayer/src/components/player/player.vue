@@ -94,6 +94,7 @@
      <source :src="currentSongUrl" type="audio/ogg">
      <source :src="currentSongUrl" type="audio/mpeg">
    </audio>
+   <song-list ref="songList"></song-list>
  </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -349,6 +350,7 @@
   import {Base64} from 'js-base64'
   import Lyric from 'lyric-parser'
   import scroll from 'base/scroll'
+  import songList from 'components/playlist/playlist'
   const animation = prefixStyle('animation')
   const transform = prefixStyle('transform')
   const transition = prefixStyle('transition')
@@ -365,7 +367,8 @@
         lyric: null,
         currentLineNum: 0,
         currentShow: 'cd',
-        currentPlayingLyric: null
+        currentPlayingLyric: null,
+        togglePlagList: false
       }
     },
     created () {
@@ -446,7 +449,7 @@
         this.setFullScreen(true)
       },
       showPlayList () {
-        console.log('显示播放列表')
+        this.$refs.songList.showList()
       },
       enter (el, done) {
         const {x, y, scale} = this._initMovePos()
@@ -694,7 +697,8 @@
     components: {
       progressBar,
       circleProgress,
-      scroll
+      scroll,
+      songList
     }
   }
 </script>
