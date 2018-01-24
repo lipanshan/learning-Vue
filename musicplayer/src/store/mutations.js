@@ -21,6 +21,15 @@ const mutations = {
   },
   [types.SET_MODE] (state, mode) {
     state.mode = mode
+  },
+  [types.SET_FAVORITELIST] (state, list) {
+    state.favoriteList = list
+  },
+  [types.SET_SEARCHHISTORYLIST] (state, list) {
+    state.searchHistoryList = list
+  },
+  [types.SET_HISTORYSONGLIST] (state, list) {
+    state.historySongList = list
   }
 }
 export default mutations

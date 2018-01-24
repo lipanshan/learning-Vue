@@ -1,19 +1,19 @@
 <template>
   <transition name="confirm-fade">
-    <div class="confirm" v-show="showFlag">
+    <div class="confirm" @click.stop="" v-show="showFlag">
       <div class="confirm-wrapper">
         <div class="confirm-content">
           <p class="text">{{text}}</p>
           <div class="operate">
-            <div @click="cancel" class="cancel-btn">{{confirmCancel}}</div>
-            <div @click="confirm" class="confirm-btn">{{confirmSure}}</div>
+            <div @click.stop="cancel" class="cancel-btn">{{confirmCancel}}</div>
+            <div @click.stop="confirm" class="confirm-btn">{{confirmSure}}</div>
           </div>
         </div>
       </div>
     </div>
   </transition>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
+<style lang="sass" type="text/css" rel="stylesheet/sass">
   @import "../common/sass/variable"
   .confirm
     position: fixed
@@ -21,7 +21,7 @@
     right: 0
     top: 0
     bottom: 0
-    z-index: 300
+    z-index: 9000
     background-color: $color-background-d
     &.confirm-fade-enter-active
       animation: confirm-fadein 0.3s

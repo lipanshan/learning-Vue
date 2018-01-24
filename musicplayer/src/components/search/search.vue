@@ -107,7 +107,6 @@
   import scroll from 'base/scroll'
   import loading from 'base/loading'
   import searchList from 'components/search-result-list/search-result-list'
-  import storage from 'good-storage'
   import historyList from 'components/history-list/history-list'
   import {mapGetters, mapActions} from 'vuex'
   import {searchCreateSong} from 'common/js/song'
@@ -118,7 +117,7 @@
     mixins: [mixinPlayer],
     created () {
       this._getHotSearchWords()
-      this.synchronousStorage()
+      this.loadSearchHistoryWord()
     },
     data () {
       return {
@@ -135,13 +134,14 @@
           totalnum: 0
         },
         flag: true,
-        searchHistoryList: [],
         searchWord: null
       }
     },
     computed: {
       ...mapGetters([
-        'playList'
+        'playList',
+        'searchHistoryList',
+        'historySongList'
       ])
     },
     methods: {
@@ -177,55 +177,22 @@
         })
       },
       deleteSearchHistory (item, index) {
-        let deleteSearch = JSON.parse(storage.get('_search_', null))
-        let deleteSong = JSON.parse(storage.get('_song_', null))
-        deleteSearch.splice(index, 1)
-        deleteSong.splice(index, 1)
-        this.searchHistoryList = deleteSearch
-        storage.set('_search_', JSON.stringify(deleteSearch))
-        storage.set('_song_', JSON.stringify(deleteSong))
+        this.deleteSearchHistoryWord(item)
+        this.deleteSearchHistorySong(this.historySongList[index])
       },
       addQuery (itemTxt, index) {
         this.searchWord = itemTxt
         this.queryResult(itemTxt)
       },
-      synchronousStorage () {
-        if (storage.has('_search_')) {
-          let searchArr = JSON.parse(storage.get('_search_', null))
-          this.searchHistoryList = searchArr
-        }
-      },
       updateStorage (item) {
-        if (storage.has('_search_')) {
-          let searchArr = JSON.parse(storage.get('_search_', null))
-          let ind = null
-          let deleteNum = 0
-          searchArr.forEach((elem, index) => {
-            if (elem === this.searchParams.searchTxt) {
-              ind = index
-            }
-          })
-          deleteNum = ind !== null ? 1 : 0
-          searchArr.splice(ind, deleteNum)
-          searchArr.unshift(this.searchParams.searchTxt)
-          storage.set('_search_', JSON.stringify(searchArr))
-          let songArr = JSON.parse(storage.get('_song_', null))
-          songArr.splice(ind, deleteNum)
-          songArr.unshift(item)
-          storage.set('_song_', JSON.stringify(songArr))
-          this.searchHistoryList = searchArr
-        } else {
-          let searchArr = [this.searchParams.searchTxt]
-          storage.set('_search_', JSON.stringify(searchArr))
-          let songArr = [item]
-          storage.set('_song_', JSON.stringify(songArr))
-          this.searchHistoryList = searchArr
-        }
+        console.log(item)
+        this.saveSearchHistorySong(item)
+        this.saveSearchHistoryWord(this.searchWord)
       },
       clearSearchHistory () {
-        storage.remove('_search_')
-        storage.remove('_song_')
-        this.searchHistoryList = []
+//        storage.remove('_search_')
+//        storage.remove('_song_')
+//        this.searchHistoryList = []
       },
       showConfirm () {
         if (!this.searchHistoryList.length) {
@@ -289,7 +256,12 @@
         this.$refs.searchListWrapper.finishPullUpFn()
       },
       ...mapActions([
-        'selectPlayer'
+        'selectPlayer',
+        'loadSearchHistoryWord',
+        'deleteSearchHistoryWord',
+        'deleteSearchHistorySong',
+        'saveSearchHistoryWord',
+        'saveSearchHistorySong'
       ])
     },
     components: {

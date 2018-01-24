@@ -12,7 +12,7 @@
         <scroll ref="listContentWrapper" :probeType="3" class="list-content" :data="playList">
           <transition-group name="list" tag="ul">
             <li class="item" v-for="(item, index) in playList" :key="item.id">
-              <i class="current icon-play"></i>
+              <i class="current" :class="currentPlayIcon(item)"></i>
               <span class="text">{{item.name}}</span>
               <span @click="changeLike(item)" class="like"><i :class="changeLikeIcon(item)"></i></span>
               <span @click="deleteSong(item)" class="delete"><i class="icon-delete"></i></span>
@@ -27,11 +27,11 @@
         </div>
         <div @click.stop="hideList" class="list-close"><span>关闭</span></div>
       </div>
-      <confirm ref="confirm" @clearHistory="clearPlayList" text="是否清空歌曲列表" confirmSure="清空"></confirm>
+      <confirm ref="confirm" class="confirm" @clearHistory="clearPlayList" text="是否清空歌曲列表" confirmSure="清空"></confirm>
     </div>
   </transition>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
+<style lang="sass" type="text/css" rel="stylesheet/sass">
   @import '../../common/sass/variable'
   @import '../../common/sass/mixin'
   .play-list
@@ -134,17 +134,21 @@
         color: $color-text-l
 </style>
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import {playMode} from '../../store/config'
   import scroll from 'base/scroll'
   import confirm from 'base/confirm'
   const MODE_NUM = 2
   export default {
+    created () {
+      this.loadStorageFavorite()
+    },
     computed: {
       ...mapGetters([
         'mode',
+        'currentIndex',
         'playList',
-        'playing'
+        'favoriteList'
       ]),
       modeText () {
         if (playMode.sequence === this.mode) {
@@ -189,49 +193,43 @@
         this.SET_MODE(num)
       },
       changeLikeIcon (item) {
-        return item.favorite ? 'icon-favorite' : 'icon-not-favorite'
+        let arr = this.favoriteList.slice()
+        for (let i = 0; i < arr.length; i++) {
+          if (item.id === arr[i].id) {
+            return 'icon-favorite'
+          }
+        }
+        return 'icon-not-favorite'
       },
       changeLike (item) {
-        let newPlayList = JSON.parse(JSON.stringify(this.playList))
-        newPlayList.forEach((song, index) => {
-          if (item.id === song.id) {
-            if (song.favorite === undefined) {
-              this.$set(newPlayList[index], 'favorite', true)
-            } else {
-              newPlayList[index].favorite = !newPlayList[index].favorite
-            }
-          }
-        })
-        this.SET_PLAYLIST(newPlayList)
+        this.storageFavorite(item)
       },
       deleteSong (item) {
-        let newPlayList = JSON.parse(JSON.stringify(this.playList))
-        let ind = null
-        newPlayList.forEach((song, index) => {
-          if (item.id === song.id) {
-            ind = index
-          }
-        })
-        if (ind !== null) {
-          newPlayList.splice(ind, 1)
+        let len = this.playList.length
+        if (len <= 1) {
+          this.deleteSongList()
+          return false
         }
-        this.SET_PLAYLIST(newPlayList)
-        if (!newPlayList.length) {
-          this.SET_PLAYING(false)
-          this.SET_PLAYLIST([])
-        }
+        this.deleteSong(item)
       },
       confirmClearList () {
         this.$refs.confirm.show()
       },
       clearPlayList () {
-        this.SET_PLAYING(false)
-        this.SET_PLAYLIST([])
+        this.deleteSongList()
+      },
+      currentPlayIcon (item) {
+        let currentSong = this.playList[this.currentIndex]
+        return item.id === currentSong.id ? 'icon-play' : ''
       },
       ...mapMutations([
-        'SET_MODE',
-        'SET_PLAYLIST',
-        'SET_PLAYING'
+        'SET_MODE'
+      ]),
+      ...mapActions([
+        'deleteSong',
+        'deleteSongList',
+        'storageFavorite',
+        'loadStorageFavorite'
       ])
     },
     components: {

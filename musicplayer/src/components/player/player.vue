@@ -67,7 +67,7 @@
              <i  class="icon-next"></i>
            </div>
            <div class="icon i-right">
-             <i class="icon-not-favorite" ></i>
+             <i @click.stop="toggleFavorite" :class="changeFavoriteIcon" ></i>
            </div>
          </div>
        </div>
@@ -339,7 +339,7 @@
         transform: rotate(360deg)
 </style>
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {getSongPlayUrl, getSongLyric} from 'api/singer'
   import {prefixStyle} from 'common/js/dom'
@@ -374,6 +374,7 @@
     created () {
       this.olPlayList = this.playList
       this.touch = {}
+      this.loadStorageFavorite()
     },
     computed: {
       ...mapGetters([
@@ -383,7 +384,8 @@
         'currentSong',
         'currentIndex',
         'mode',
-        'sequenceList'
+        'sequenceList',
+        'favoriteList'
       ]),
       cdClass () {
         return this.playing ? 'play' : 'play pause'
@@ -411,11 +413,23 @@
         if (this.mode === playMode.random) {
           return 'icon-random'
         }
+      },
+      changeFavoriteIcon () {
+        for (let i = 0; i < this.favoriteList.length; i++) {
+          if (this.favoriteList[i].id === this.currentSong.id) {
+            return 'icon-favorite'
+          }
+        }
+        return 'icon-not-favorite'
       }
     },
     watch: {
       'currentSong' (n, o) {
-        if (!n || !n.url || n.id === o.id) { return false }
+        if (!n || !n.url) {
+          this.currentSongUrl = ''
+          return false
+        }
+        if (n.id === o.id) { return false }
         getSongPlayUrl(n.mid, n.url).then((res) => {
           if (res.code === ERROR_NO) {
             this.currentSongUrl = `http://dl.stream.qqmusic.qq.com/${res.data.items[0].filename}?vkey=${res.data.items[0].vkey}&guid=541193902&uin=0&fromtag=66`
@@ -649,6 +663,9 @@
         this.touch.initTouch = false
         this.touch.percent = 0
       },
+      toggleFavorite () {
+        this.storageFavorite(this.currentSong)
+      },
       _formatSongTime (t) {
         let m = Math.floor(t / 60)
         let s = Math.floor(t % 60)
@@ -692,7 +709,11 @@
         setCurrentIndex: 'SET_CURRENTINDEX',
         setPlayMode: 'SET_MODE',
         setPlayList: 'SET_PLAYLIST'
-      })
+      }),
+      ...mapActions([
+        'loadStorageFavorite',
+        'storageFavorite'
+      ])
     },
     components: {
       progressBar,
