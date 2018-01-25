@@ -34,7 +34,7 @@ export default new Router({
       component: rank,
       children: [
         {
-          path: `:id`,
+          path: ':id',
           component: rankSongInfo
         }
       ]

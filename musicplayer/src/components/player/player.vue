@@ -375,6 +375,7 @@
       this.olPlayList = this.playList
       this.touch = {}
       this.loadStorageFavorite()
+      this.loadSearchHistorySong()
     },
     computed: {
       ...mapGetters([
@@ -444,6 +445,9 @@
             this._formatLyric()
           }
         })
+        if (n.id !== undefined) {
+          this.saveSearchHistorySong(n)
+        }
       },
       playing (newPlaying) {
         if (!this.songReady) {
@@ -712,7 +716,9 @@
       }),
       ...mapActions([
         'loadStorageFavorite',
-        'storageFavorite'
+        'storageFavorite',
+        'loadSearchHistorySong',
+        'saveSearchHistorySong'
       ])
     },
     components: {

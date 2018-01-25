@@ -1,24 +1,26 @@
 <template>
-  <div class="music-list" ref="musicListWrapper">
-    <div class="back" @click="back">
-      <i class="icon-back"></i>
-    </div>
-    <h1 class="title" v-html="title"></h1>
-    <div ref="bgImageTag" class="bg-image" :style="backgroundImage">
-      <div ref="fliterTag" class="filter"></div>
-      <div v-show="playBtn && list && list.length" class="play-wrapper">
-        <div class="play" @click="randomPlay">
-          <i class="icon-play"></i>
-          <span class="text">随机播放全部</span>
+  <transition name="move">
+    <div class="music-list" ref="musicListWrapper">
+      <div class="back" @click="back">
+        <i class="icon-back"></i>
+      </div>
+      <h1 class="title" v-html="title"></h1>
+      <div ref="bgImageTag" class="bg-image" :style="backgroundImage">
+        <div ref="fliterTag" class="filter"></div>
+        <div v-show="playBtn && list && list.length" class="play-wrapper">
+          <div class="play" @click="randomPlay">
+            <i class="icon-play"></i>
+            <span class="text">随机播放全部</span>
+          </div>
         </div>
       </div>
+      <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
+      <div ref="bgLayer" class="bg-layer"></div>
+      <scroll v-if="list" :list="list" :class="{'overflowHidden': switchClass}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
+        <song-list :rankIconShow="rankIcon" :list="list" @select="selectItem"></song-list>
+      </scroll>
     </div>
-    <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
-    <div ref="bgLayer" class="bg-layer"></div>
-    <scroll v-if="list" :list="list" :class="{'overflowHidden': switchClass}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
-      <song-list :rankIconShow="rankIcon" :list="list" @select="selectItem"></song-list>
-    </scroll>
-  </div>
+  </transition>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
   @import '../../common/sass/variable'

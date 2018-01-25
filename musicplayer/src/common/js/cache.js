@@ -27,14 +27,11 @@ export function saveSearchHistory (item) {
 export function deleteSearchHistory (item) {
   if (!storage.has(word)) { return [] }
   let worldList = JSON.parse(storage.get(word))
-  let songList = JSON.parse(storage.get(song))
   let len = worldList.length
   for (let i = 0; i < len; i++) {
     if (worldList[i] === item) {
       worldList.splice(i, 1)
-      songList.splice(i, 1)
       storage.set(word, JSON.stringify(worldList))
-      storage.set(song, JSON.stringify(songList))
       return worldList
     }
   }
@@ -73,17 +70,15 @@ export function loadFavorite () {
   if (!storage.has(favorite)) { return [] }
   return JSON.parse(storage.get(favorite))
 }
-export function saveHistorySong (item, itemWord) {
+export function saveHistorySong (item) {
   if (!storage.has(song)) {
     let songlList = [item]
     storage.set(song, JSON.stringify(songlList))
     return songlList
   }
   let songlList = JSON.parse(storage.get(song))
-  let words = JSON.parse(storage.get(word))
-  let len = words.length
-  for (let i = 0; i < len; i++) {
-    if (words[i] === itemWord) {
+  for (let i = 0; i < songlList.length; i++) {
+    if (songlList[i].id === item.id) {
       songlList.splice(i, 1)
     }
   }
@@ -94,7 +89,26 @@ export function saveHistorySong (item, itemWord) {
   storage.set(song, JSON.stringify(songlList))
   return songlList
 }
+export function deleteHistorySong (item) {
+  if (!storage.has(song)) {
+    storage.set(song, [])
+    return []
+  }
+  let songList = JSON.parse(storage.get(song))
+  let len = songList.length
+  for (let i = 0; i < len; i++) {
+    if (songList[i].id === item) {
+      songList.splice(i, 1)
+      storage.set(song, JSON.parse(songList))
+      return songList
+    }
+  }
+}
 export function loadHistorySong () {
   if (!storage.has(song)) { return [] }
   return JSON.parse(storage.get(song))
+}
+export function deleteAllSearchHistory () {
+  storage.set(word, JSON.stringify([]))
+  return []
 }

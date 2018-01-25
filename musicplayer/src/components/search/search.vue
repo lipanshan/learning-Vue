@@ -170,11 +170,6 @@
         let addSong = []
         let newSong = searchCreateSong(item)
         addSong = addSong.concat(newSong, this.playList)
-        let obj = {
-          s: item,
-          w: this.searchWord
-        }
-        this.saveSearchHistorySong(obj)
         this.saveSearchHistoryWord(this.searchWord)
         this.selectPlayer({
           'list': addSong,
@@ -187,13 +182,6 @@
       addQuery (itemTxt, index) {
         this.searchWord = itemTxt
         this.queryResult(itemTxt)
-        let addSong = []
-        let newSong = searchCreateSong(this.searchSongList[index])
-        addSong = addSong.concat(newSong, this.playList)
-        this.selectPlayer({
-          'list': addSong,
-          'index': 0
-        })
       },
       clearSearchHistory () {
         this.deleteSearchHistoryList()

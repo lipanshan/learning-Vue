@@ -1,33 +1,36 @@
 <template>
   <transition name="move-fade">
-    <div v-show="toggleList" @click="hideList" class="play-list">
-      <div @click.stop="showList" class="list-wrapper">
-        <div class="list-header">
-          <h1 class="title">
-            <i class="icon" :class="modeClass" @click.stop="changeMode"></i>
-            <span class="text">{{modeText}}</span>
-            <span @click="confirmClearList" class="clear"><i class="icon-clear"></i></span>
-          </h1>
-        </div>
-        <scroll ref="listContentWrapper" :probeType="3" class="list-content" :data="playList">
-          <transition-group name="list" tag="ul">
-            <li @click="selectSongPlay(item, index)" class="item" v-for="(item, index) in playList" :key="item.id">
-              <i class="current" :class="currentPlayIcon(item)"></i>
-              <span class="text">{{item.name}}</span>
-              <span @click.stop="changeLike(item)" class="like"><i :class="changeLikeIcon(item)"></i></span>
-              <span @click.stop="deleteSong(item)" class="delete"><i class="icon-delete"></i></span>
-            </li>
-          </transition-group>
-        </scroll>
-        <div class="list-operate">
-          <div class="add">
-            <i class="icon-add"></i>
-            <span class="text">{{text}}</span>
+    <div v-show="toggleList"  class="play-list">
+      <div @click="hideList" class="play-list-content">
+        <div @click.stop="showList" class="list-wrapper">
+          <div class="list-header">
+            <h1 class="title">
+              <i class="icon" :class="modeClass" @click.stop="changeMode"></i>
+              <span class="text">{{modeText}}</span>
+              <span @click="confirmClearList" class="clear"><i class="icon-clear"></i></span>
+            </h1>
           </div>
+          <scroll ref="listContentWrapper" :probeType="3" class="list-content" :data="playList">
+            <transition-group name="list" tag="ul">
+              <li @click="selectSongPlay(item, index)" class="item" v-for="(item, index) in playList" :key="item.id">
+                <i class="current" :class="currentPlayIcon(item)"></i>
+                <span class="text">{{item.name}}</span>
+                <span @click.stop="changeLike(item)" class="like"><i :class="changeLikeIcon(item)"></i></span>
+                <span @click.stop="deleteSong(item)" class="delete"><i class="icon-delete"></i></span>
+              </li>
+            </transition-group>
+          </scroll>
+          <div class="list-operate">
+            <div @click.stop="addSongToList" class="add">
+              <i class="icon-add"></i>
+              <span class="text">{{text}}</span>
+            </div>
+          </div>
+          <div @click.stop="hideList" class="list-close"><span>关闭</span></div>
         </div>
-        <div @click.stop="hideList" class="list-close"><span>关闭</span></div>
       </div>
       <confirm ref="confirm" class="confirm" @clearHistory="clearPlayList" text="是否清空歌曲列表" confirmSure="清空"></confirm>
+      <add-song ref="addSongWrapper"></add-song>
     </div>
   </transition>
 </template>
@@ -45,13 +48,20 @@
     &.move-fade-enter-active, &.move-fade-leave-active
       transition: opacity 0.3s
       opacity: 1
-      .play-list
+      .play-list-content
         transition: all 0.3s
         transform: translate3d(0, 0, 0)
     &.move-fade-enter, &.move-fade-leave-to
       opacity: 0
-      .play-list
-        transform: translate3d(0, -100%, 0)
+      .play-list-content
+        transform: translate3d(0, 100%, 0)
+    .play-list-content
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      z-index: 350
     .list-wrapper
       position: absolute
       left: 0
@@ -139,6 +149,7 @@
   import {playMode} from '../../store/config'
   import scroll from 'base/scroll'
   import confirm from 'base/confirm'
+  import addSong from 'components/add-song/add-song'
   const MODE_NUM = 2
   export default {
     created () {
@@ -148,6 +159,7 @@
       ...mapGetters([
         'mode',
         'currentIndex',
+        'currentSong',
         'playList',
         'favoriteList'
       ]),
@@ -220,14 +232,18 @@
         this.deleteSongList()
       },
       currentPlayIcon (item) {
-        let currentSong = this.playList[this.currentIndex]
-        return item.id === currentSong.id ? 'icon-play' : ''
+        return item.id === this.currentSong.id ? 'icon-play' : ''
       },
       selectSongPlay (song, index) {
         this.selectPlayer({
           'list': this.playList,
           'index': index
         })
+        let elem = this.$refs.listContentWrapper.$el.getElementsByClassName('item')[index]
+        this.$refs.listContentWrapper.scrollToElement(elem)
+      },
+      addSongToList () {
+        this.$refs.addSongWrapper.show()
       },
       ...mapMutations([
         'SET_MODE'
@@ -242,7 +258,8 @@
     },
     components: {
       scroll,
-      confirm
+      confirm,
+      addSong
     }
   }
 </script>

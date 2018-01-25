@@ -74,11 +74,13 @@
     data () {
       return {
         topList: [],
-        selectTopItem: null
+        selectTopItem: null,
+        topID: null
       }
     },
     created () {
       this.getRankGroupList()
+      this._getRankPath()
     },
     methods: {
       handlePlayingList (playList) {
@@ -98,9 +100,17 @@
       selectItem (item) {
         this.selectTopItem = item
         this.setSinger(item)
+        this.topID = item.topID
         this.$router.push({
           path: `/rank/id=${item.topID}`
         })
+      },
+      _getRankPath () {
+        if (!this.topID) {
+          this.$router.push({
+            path: '/rank'
+          })
+        }
       },
       ...mapMutations({
         setSinger: 'SET_SINGER'

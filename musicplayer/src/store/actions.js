@@ -1,7 +1,7 @@
 import * as types from '../store/mutation-types'
 import {randowArray, findIndex} from '../common/js/randomarray'
 import {playMode} from '../store/config'
-import {saveFavorite, deleteFavorite, loadFavorite, saveSearchHistory, deleteSearchHistory, loadWorld, saveHistorySong, loadHistorySong} from 'common/js/cache'
+import {saveFavorite, deleteFavorite, loadFavorite, saveSearchHistory, deleteSearchHistory, loadWorld, saveHistorySong, loadHistorySong, deleteAllSearchHistory, deleteHistorySong} from 'common/js/cache'
 
 export const selectPlayer = function ({commit, state}, {list, index}) {
   commit(types.SET_CURRENTINDEX, findIndex(list, list[index]))
@@ -59,19 +59,22 @@ export const loadStorageFavorite = function ({commit, state}) {
 }
 export const deleteSearchHistoryWord = function ({commit, state}, item) {
   commit(types.SET_SEARCHWORDLIST, deleteSearchHistory(item))
-  commit(types.SET_SEARCHSONGLIST, loadHistorySong())
 }
 export const saveSearchHistoryWord = function ({commit, state}, item) {
   commit(types.SET_SEARCHWORDLIST, saveSearchHistory(item))
 }
 export const loadSearchHistoryWord = function ({commit, state}) {
   commit(types.SET_SEARCHWORDLIST, loadWorld())
+}
+export const saveSearchHistorySong = function ({commit, state}, song) {
+  commit(types.SET_SEARCHSONGLIST, saveHistorySong(song))
+}
+export const deleteSearchHistorySong = function ({commit, state}, song) {
+  commit(types.SET_SEARCHSONGLIST, deleteHistorySong(song))
+}
+export const loadSearchHistorySong = function ({commit, state}) {
   commit(types.SET_SEARCHSONGLIST, loadHistorySong())
 }
-export const saveSearchHistorySong = function ({commit, state}, obj) {
-  commit(types.SET_SEARCHSONGLIST, saveHistorySong(obj.s, obj.w))
-}
 export const deleteSearchHistoryList = function ({commit, state}) {
-  commit(types.SET_SEARCHSONGLIST, [])
-  commit(types.SET_SEARCHWORDLIST, [])
+  commit(types.SET_SEARCHWORDLIST, deleteAllSearchHistory())
 }
