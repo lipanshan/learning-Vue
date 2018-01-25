@@ -24,7 +24,7 @@
                 <i class="icon-clear"></i>
               </span>
             </h1>
-            <history-list @delete="deleteSearchHistory" @select="addQuery" :historys="searchHistoryList"></history-list>
+            <history-list @delete="deleteSearchHistory" @select="addQuery" :historys="searchWordList"></history-list>
           </div>
         </div>
       </scroll>
@@ -140,8 +140,8 @@
     computed: {
       ...mapGetters([
         'playList',
-        'searchHistoryList',
-        'historySongList'
+        'searchWordList',
+        'searchSongList'
       ])
     },
     methods: {
@@ -167,10 +167,15 @@
         this.query = null
       },
       selectedItem (item, index) {
-        this.updateStorage(item)
         let addSong = []
         let newSong = searchCreateSong(item)
         addSong = addSong.concat(newSong, this.playList)
+        let obj = {
+          s: item,
+          w: this.searchWord
+        }
+        this.saveSearchHistorySong(obj)
+        this.saveSearchHistoryWord(this.searchWord)
         this.selectPlayer({
           'list': addSong,
           'index': 0
@@ -178,24 +183,23 @@
       },
       deleteSearchHistory (item, index) {
         this.deleteSearchHistoryWord(item)
-        this.deleteSearchHistorySong(this.historySongList[index])
       },
       addQuery (itemTxt, index) {
         this.searchWord = itemTxt
         this.queryResult(itemTxt)
-      },
-      updateStorage (item) {
-        console.log(item)
-        this.saveSearchHistorySong(item)
-        this.saveSearchHistoryWord(this.searchWord)
+        let addSong = []
+        let newSong = searchCreateSong(this.searchSongList[index])
+        addSong = addSong.concat(newSong, this.playList)
+        this.selectPlayer({
+          'list': addSong,
+          'index': 0
+        })
       },
       clearSearchHistory () {
-//        storage.remove('_search_')
-//        storage.remove('_song_')
-//        this.searchHistoryList = []
+        this.deleteSearchHistoryList()
       },
       showConfirm () {
-        if (!this.searchHistoryList.length) {
+        if (!this.searchWordList.length) {
           return false
         }
         this.$refs.confirm.show()
@@ -259,9 +263,9 @@
         'selectPlayer',
         'loadSearchHistoryWord',
         'deleteSearchHistoryWord',
-        'deleteSearchHistorySong',
         'saveSearchHistoryWord',
-        'saveSearchHistorySong'
+        'saveSearchHistorySong',
+        'deleteSearchHistoryList'
       ])
     },
     components: {

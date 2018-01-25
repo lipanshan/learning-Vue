@@ -25,11 +25,11 @@ const mutations = {
   [types.SET_FAVORITELIST] (state, list) {
     state.favoriteList = list
   },
-  [types.SET_SEARCHHISTORYLIST] (state, list) {
-    state.searchHistoryList = list
+  [types.SET_SEARCHSONGLIST] (state, list) {
+    state.searchSongList = list
   },
-  [types.SET_HISTORYSONGLIST] (state, list) {
-    state.historySongList = list
+  [types.SET_SEARCHWORDLIST] (state, list) {
+    state.searchWordList = list
   }
 }
 export default mutations

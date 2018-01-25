@@ -9,5 +9,5 @@ export const currentSong = (state) => {
   return state.playList[state.currentIndex] || {}
 }
 export const favoriteList = (state) => state.favoriteList
-export const searchHistoryList = (state) => state.searchHistoryList
-export const historySongList = (state) => state.historySongList
+export const searchSongList = (state) => state.searchSongList
+export const searchWordList = (state) => state.searchWordList

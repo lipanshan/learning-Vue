@@ -11,11 +11,11 @@
         </div>
         <scroll ref="listContentWrapper" :probeType="3" class="list-content" :data="playList">
           <transition-group name="list" tag="ul">
-            <li class="item" v-for="(item, index) in playList" :key="item.id">
+            <li @click="selectSongPlay(item, index)" class="item" v-for="(item, index) in playList" :key="item.id">
               <i class="current" :class="currentPlayIcon(item)"></i>
               <span class="text">{{item.name}}</span>
-              <span @click="changeLike(item)" class="like"><i :class="changeLikeIcon(item)"></i></span>
-              <span @click="deleteSong(item)" class="delete"><i class="icon-delete"></i></span>
+              <span @click.stop="changeLike(item)" class="like"><i :class="changeLikeIcon(item)"></i></span>
+              <span @click.stop="deleteSong(item)" class="delete"><i class="icon-delete"></i></span>
             </li>
           </transition-group>
         </scroll>
@@ -84,6 +84,7 @@
           display: flex
           align-items: center
           height: 40px
+          line-height: 40px
           padding: 0 30px 0 20px
           overflow: hidden
           &.list-enter-active, &.list-leave-active
@@ -222,6 +223,12 @@
         let currentSong = this.playList[this.currentIndex]
         return item.id === currentSong.id ? 'icon-play' : ''
       },
+      selectSongPlay (song, index) {
+        this.selectPlayer({
+          'list': this.playList,
+          'index': index
+        })
+      },
       ...mapMutations([
         'SET_MODE'
       ]),
@@ -229,7 +236,8 @@
         'deleteSong',
         'deleteSongList',
         'storageFavorite',
-        'loadStorageFavorite'
+        'loadStorageFavorite',
+        'selectPlayer'
       ])
     },
     components: {

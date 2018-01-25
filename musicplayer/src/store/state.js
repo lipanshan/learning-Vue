@@ -9,7 +9,7 @@ const state = {
   mode: playMode.sequence,
   currentIndex: 0,
   favoriteList: [],
-  searchHistoryList: [],
+  searchSongList: [],
   searchWordList: []
 }
 export default state
