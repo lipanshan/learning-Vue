@@ -52,7 +52,8 @@
     data () {
       return {
         focusStatus: false,
-        search: ''
+        search: '',
+        queryTimer: null
       }
     },
     watch: {
@@ -66,7 +67,10 @@
         this.$emit('clearFn')
       },
       query () {
-        this.$emit('queryFn', this.search)
+        clearTimeout(this.queryTimer)
+        this.queryTimer = setTimeout(() => {
+          this.$emit('queryFn', this.search)
+        }, 800)
       },
       _blur () {
         this.focusStatus = false

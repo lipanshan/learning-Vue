@@ -243,6 +243,9 @@
         this.loadingIcon = false
       },
       _normalAddSearchResult (data) {
+        if (this.query === null) {
+          return false
+        }
         this.query = data.song.list ? this.query.concat(data.song.list) : this.query
         this.$refs.searchListWrapper.closeLoadingIcon()
         this.$refs.searchListWrapper.finishPullUpFn()

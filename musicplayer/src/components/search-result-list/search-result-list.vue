@@ -15,7 +15,7 @@
         </div>
       </li>
       <li class="loading-icon" v-show="addPage">
-        <loading class="loading-content" :text="null"></loading>
+        <loading class="loading-content" :text="loadTxt"></loading>
       </li>
     </scroll>
     <div v-show="list && !list.length" class="no-result-wrapper">
@@ -86,6 +86,10 @@
       totalnum: {
         type: Number,
         default: 0
+      },
+      loadTxt: {
+        type: String,
+        default: ''
       }
     },
     data () {
@@ -102,11 +106,12 @@
         }
       },
       scrollEnd () {
-        if (this.totalnum !== 0 && this.list.length >= this.totalnum) {
-          return false
-        } else {
-          this.addPage = true
-          this.$refs.searchList.refresh()
+        this.addPage = true
+      },
+      scrollStart () {
+        let firstElem = this.$refs.searchList.$el.getElementsByClassName('search-item')[0]
+        if (firstElem) {
+          this.$refs.searchList.scrollToElement(firstElem)
         }
       },
       pullingUp () {

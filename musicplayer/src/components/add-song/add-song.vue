@@ -8,11 +8,11 @@
         </div>
       </div>
       <div class="search-box-wrapper">
-        <search-box ></search-box>
+        <search-box @clearFn="clearInput" @queryFn="query"></search-box>
       </div>
       <div class="shortcut" >
         <div class="list-wrapper">
-          <switches :tagList="subTitle" @switch="tagSwitch"></switches>
+          <switches class="switch-wrap" :tagList="subTitle" @switch="tagSwitch"></switches>
           <scroll class="list-scroll" v-show="switchList" :data="searchSongList">
             <transition-group name="list" tag="div">
               <div v-for="(songItem, index) in searchSongList" class="list-item" :key="songItem.id">
@@ -31,8 +31,9 @@
           </scroll>
         </div>
       </div>
-      <!--<div class="search-result">-->
-      <!--</div>-->
+      <div class="search-result" v-show="searchResultList">
+        <search-result ref="searchResultWrap" :list="searchResultList" @pullingUpFn="loadSearchResult"></search-result>
+      </div>
     </div>
   </transition>
 </template>
@@ -82,6 +83,8 @@
         bottom: 0
         width: 100%
         background-color: $color-background
+        .switch-wrap
+          margin-bottom: 20px
       .list-scroll
         height: 100%
         overflow: hidden
@@ -128,12 +131,24 @@
   import switches from 'base/switches'
   import scroll from 'base/scroll'
   import {mapGetters, mapActions} from 'vuex'
+  import searchResult from 'components/search-result-list/search-result-list'
+  import {getQueryInfo} from 'api/search'
+//  import {searchCreateSong} from 'common/js/song'
+  const ERROR_NUM = 0
   export default {
     data () {
       return {
         showFlag: false,
         subTitle: ['最近播放', '搜索历史'],
-        switchList: true
+        switchList: true,
+        searchResultList: null,
+        searchParams: {
+          curPage: 1,
+          searchTxt: '',
+          curNum: 20,
+          totalnum: 0
+        },
+        timer: null
       }
     },
     created () {
@@ -159,6 +174,54 @@
           this.switchList = false
         }
       },
+      query (val) {
+        this.searchParams.searchTxt = val
+        if (val === '') {
+          this.searchResultList = null
+          return false
+        }
+        this._getQueryInfo()
+      },
+      clearInput () {
+        this.searchResultList = null
+      },
+      _getQueryInfo () {
+        this.searchParams.curPage = 1
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          getQueryInfo(this.searchParams).then((res) => {
+            if (res.code === ERROR_NUM) {
+              this.$refs.searchResultWrap.scrollStart()
+              this.$refs.searchResultWrap.closeLoadingIcon()
+              this._normalSearchSong(res.data.song)
+            }
+          })
+        }, 600)
+      },
+      loadSearchResult () {
+        console.log(this.searchParams, 123)
+        getQueryInfo(this.searchParams).then((res) => {
+          if (res.code === ERROR_NUM) {
+            if (res.subcode === ERROR_NUM) {
+              this._normalSearchSong(res.data.song, true)
+            }
+            clearTimeout(this.finishTimer)
+            this.finishTimer = setTimeout(() => {
+              this.$refs.searchResultWrap.finishPullUpFn()
+            }, 1000)
+          }
+        })
+      },
+      _normalSearchSong (list, flag) {
+        if (!flag) {
+          this.searchResultList = list.list
+          this.searchParams.totalnum = list.totalnum
+          this.searchParams.curPage = 1
+        } else {
+          this.searchResultList = this.searchResultList.concat(list.list)
+        }
+        this.searchParams.curPage = list.curpage + 1
+      },
       _initList () {
         this.loadSearchHistorySong()
         this.loadSearchHistoryWord()
@@ -171,7 +234,8 @@
     components: {
       searchBox,
       switches,
-      scroll
+      scroll,
+      searchResult
     }
   }
 </script>
