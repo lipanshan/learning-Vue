@@ -90,11 +90,14 @@
       loadTxt: {
         type: String,
         default: ''
+      },
+      addPage: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
       return {
-        addPage: false
       }
     },
     methods: {
@@ -106,7 +109,6 @@
         }
       },
       scrollEnd () {
-        this.addPage = true
       },
       scrollStart () {
         let firstElem = this.$refs.searchList.$el.getElementsByClassName('search-item')[0]
@@ -120,11 +122,13 @@
       selectItem (item, ind) {
         this.$emit('selectedItem', item, ind)
       },
-      closeLoadingIcon () {
-        this.addPage = false
-      },
       finishPullUpFn () {
-        this.$refs.searchList.finishPullUp()
+        this.$nextTick(() => {
+          this.$refs.searchList.finishPullUp()
+          this.$refs.searchList.refresh()
+        })
+      },
+      refresh () {
         this.$refs.searchList.refresh()
       }
     },

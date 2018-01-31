@@ -27,8 +27,7 @@ export function saveSearchHistory (item) {
 export function deleteSearchHistory (item) {
   if (!storage.has(word)) { return [] }
   let worldList = JSON.parse(storage.get(word))
-  let len = worldList.length
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < worldList.length; i++) {
     if (worldList[i] === item) {
       worldList.splice(i, 1)
       storage.set(word, JSON.stringify(worldList))
@@ -95,11 +94,10 @@ export function deleteHistorySong (item) {
     return []
   }
   let songList = JSON.parse(storage.get(song))
-  let len = songList.length
-  for (let i = 0; i < len; i++) {
-    if (songList[i].id === item) {
+  for (let i = 0; i < songList.length; i++) {
+    if (songList[i].id === item.id) {
       songList.splice(i, 1)
-      storage.set(song, JSON.parse(songList))
+      storage.set(song, JSON.stringify(songList))
       return songList
     }
   }

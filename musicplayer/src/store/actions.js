@@ -78,3 +78,17 @@ export const loadSearchHistorySong = function ({commit, state}) {
 export const deleteSearchHistoryList = function ({commit, state}) {
   commit(types.SET_SEARCHWORDLIST, deleteAllSearchHistory())
 }
+export const addSongToPlayList = function ({commit, state}, song) {
+  let newPlayList = state.playList.slice()
+  let curIndex = state.currentIndex
+  let flag = newPlayList.some((s, i) => {
+    return s.id === song.id
+  })
+  if (!flag) {
+    let curSong = newPlayList.splice(curIndex, 1, song)
+    newPlayList.splice(curIndex, 0, curSong[0])
+  }
+  commit(types.SET_PLAYLIST, newPlayList)
+  commit(types.SET_SEQUENCELIST, newPlayList)
+  commit(types.SET_PLAYING, state.playing)
+}

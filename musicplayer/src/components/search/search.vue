@@ -247,7 +247,6 @@
           return false
         }
         this.query = data.song.list ? this.query.concat(data.song.list) : this.query
-        this.$refs.searchListWrapper.closeLoadingIcon()
         this.$refs.searchListWrapper.finishPullUpFn()
       },
       ...mapActions([

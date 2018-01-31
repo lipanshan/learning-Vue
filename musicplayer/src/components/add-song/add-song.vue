@@ -8,31 +8,31 @@
         </div>
       </div>
       <div class="search-box-wrapper">
-        <search-box @clearFn="clearInput" @queryFn="query"></search-box>
+        <search-box @clearFn="clearInput" :searchWord="inputWords" @queryFn="query"></search-box>
       </div>
       <div class="shortcut" >
         <div class="list-wrapper">
           <switches class="switch-wrap" :tagList="subTitle" @switch="tagSwitch"></switches>
           <scroll class="list-scroll" v-show="switchList" :data="searchSongList">
             <transition-group name="list" tag="div">
-              <div v-for="(songItem, index) in searchSongList" class="list-item" :key="songItem.id">
-                <span class="text">{{songItem.name}}</span>
-                <span class="delete"><i class="icon-delete"></i></span>
+              <div @click="selectSong(songItem, index)" v-for="(songItem, index) in searchSongList" class="list-item" :key="songItem.id">
+                <div class="text"><p class="txt-name">{{songItem.name}}</p><p class="txt-singer">{{songItem.singer}}</p></div>
+                <span @click.stop="deleteSong(songItem, index)" class="delete"><i class="icon-delete"></i></span>
               </div>
             </transition-group>
           </scroll>
           <scroll class="list-scroll" v-show="!switchList" :data="searchWordList">
             <transition-group name="list" tag="div">
-              <div v-for="(wordItem, i) in searchWordList" class="list-item" :key="i">
-                <span class="text">{{wordItem}}</span>
-                <span class="delete"><i class="icon-delete"></i></span>
+              <div @click="selectWord(wordItem, i)" v-for="(wordItem, i) in searchWordList" class="list-item" :key="wordItem">
+                <span  class="text">{{wordItem}}</span>
+                <span @click.stop="deleteWord(wordItem, i)" class="delete"><i class="icon-delete"></i></span>
               </div>
             </transition-group>
           </scroll>
         </div>
       </div>
       <div class="search-result" v-show="searchResultList">
-        <search-result ref="searchResultWrap" :list="searchResultList" @pullingUpFn="loadSearchResult"></search-result>
+        <search-result ref="searchResultWrap" :list="searchResultList" @pullingUpFn="loadSearchResult" :addPage="addPageIcon" @selectedItem="selectSongPlay"></search-result>
       </div>
     </div>
   </transition>
@@ -92,9 +92,9 @@
           padding: 20px 30px
           display: flex
           align-items: center
-          height: 40px
+          min-height: 40px
           line-height: 40px
-          padding: 0 30px 0 20px
+          padding: 0 30px
           overflow: hidden
           &.list-enter-active, &.list-leave-active
             transition: all 0.1s
@@ -105,6 +105,24 @@
             @include no-wrap()
             font-size: $font-size-medium
             color: $color-text-d
+            .txt-name
+              margin-top: 10px
+              width: 80%
+              font-size: 12px
+              line-height: 20px
+              color: #fff
+              overflow: hidden;
+              text-overflow: ellipsis
+              white-space: nowrap
+            .txt-singer
+              margin-top: 4px
+              margin-bottom: 10px
+              width: 80%
+              font-size: 12px
+              line-height: 20px
+              overflow: hidden;
+              text-overflow: ellipsis
+              white-space: nowrap
           .delete
             @include extend-click()
             font-size: $font-size-small
@@ -133,7 +151,7 @@
   import {mapGetters, mapActions} from 'vuex'
   import searchResult from 'components/search-result-list/search-result-list'
   import {getQueryInfo} from 'api/search'
-//  import {searchCreateSong} from 'common/js/song'
+  import {searchCreateSong} from 'common/js/song'
   const ERROR_NUM = 0
   export default {
     data () {
@@ -148,7 +166,11 @@
           curNum: 20,
           totalnum: 0
         },
-        timer: null
+        timer: null,
+        pullUpTimer: null,
+        addPageIcon: true,
+        addPageFlag: true,
+        inputWords: ''
       }
     },
     created () {
@@ -185,42 +207,81 @@
       clearInput () {
         this.searchResultList = null
       },
+      selectSong (song, index) {
+        this.addSongToPlayList(song)
+      },
+      deleteSong (song, index) {
+        this.deleteSearchHistorySong(song)
+      },
+      selectWord (word, index) {
+        this.searchParams.searchTxt = word
+        this.inputWords = word
+        if (word === '') {
+          this.searchResultList = null
+          return false
+        }
+        this._getQueryInfo()
+      },
+      deleteWord (word, index) {
+        this.deleteSearchHistoryWord(word)
+      },
+      loadSearchResult () {
+        if (!this.addPageFlag) {
+          return false
+        }
+        this.addPageIcon = true
+        this.$nextTick(() => {
+          this.$refs.searchResultWrap.refresh()
+        })
+        getQueryInfo(this.searchParams).then((res) => {
+          if (res.code === ERROR_NUM) {
+            if (res.subcode === ERROR_NUM) {
+              this._normalSearchSong(res.data.song, true)
+            } else {
+              this.addPageIcon = false
+              this.addPageFlag = false
+              this.$refs.searchResultWrap.finishPullUpFn()
+            }
+          }
+        })
+      },
+      selectSongPlay (song, index) {
+        this.addSongToPlayList(song)
+      },
       _getQueryInfo () {
+        this.addPageFlag = true
+        this.addPageIcon = false
         this.searchParams.curPage = 1
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           getQueryInfo(this.searchParams).then((res) => {
             if (res.code === ERROR_NUM) {
               this.$refs.searchResultWrap.scrollStart()
-              this.$refs.searchResultWrap.closeLoadingIcon()
               this._normalSearchSong(res.data.song)
             }
           })
         }, 600)
       },
-      loadSearchResult () {
-        console.log(this.searchParams, 123)
-        getQueryInfo(this.searchParams).then((res) => {
-          if (res.code === ERROR_NUM) {
-            if (res.subcode === ERROR_NUM) {
-              this._normalSearchSong(res.data.song, true)
-            }
-            clearTimeout(this.finishTimer)
-            this.finishTimer = setTimeout(() => {
-              this.$refs.searchResultWrap.finishPullUpFn()
-            }, 1000)
-          }
-        })
-      },
       _normalSearchSong (list, flag) {
+        let normalList = []
+        list.list.forEach((s, i) => {
+          normalList.push(searchCreateSong(s))
+        })
         if (!flag) {
-          this.searchResultList = list.list
+          this.searchResultList = normalList
           this.searchParams.totalnum = list.totalnum
           this.searchParams.curPage = 1
         } else {
-          this.searchResultList = this.searchResultList.concat(list.list)
+          if (this.searchResultList !== null) {
+            this.searchResultList = this.searchResultList.concat(normalList)
+          }
         }
-        this.searchParams.curPage = list.curpage + 1
+        clearTimeout(this.pullUpTimer)
+        this.pullUpTimer = setTimeout(() => {
+          this.addPageIcon = false
+          this.searchParams.curPage = list.curpage + 1
+          this.$refs.searchResultWrap.finishPullUpFn()
+        }, 600)
       },
       _initList () {
         this.loadSearchHistorySong()
@@ -228,7 +289,10 @@
       },
       ...mapActions([
         'loadSearchHistorySong',
-        'loadSearchHistoryWord'
+        'loadSearchHistoryWord',
+        'deleteSearchHistoryWord',
+        'deleteSearchHistorySong',
+        'addSongToPlayList'
       ])
     },
     components: {
