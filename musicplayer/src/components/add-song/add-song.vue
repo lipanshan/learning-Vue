@@ -163,8 +163,7 @@
         searchParams: {
           curPage: 1,
           searchTxt: '',
-          curNum: 20,
-          totalnum: 0
+          curNum: 20
         },
         timer: null,
         pullUpTimer: null,
@@ -269,7 +268,6 @@
         })
         if (!flag) {
           this.searchResultList = normalList
-          this.searchParams.totalnum = list.totalnum
           this.searchParams.curPage = 1
         } else {
           if (this.searchResultList !== null) {

@@ -83,10 +83,6 @@
           return []
         }
       },
-      totalnum: {
-        type: Number,
-        default: 0
-      },
       loadTxt: {
         type: String,
         default: ''

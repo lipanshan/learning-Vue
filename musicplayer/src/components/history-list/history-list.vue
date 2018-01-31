@@ -1,13 +1,15 @@
 <template>
   <div class="history-list" :data="historys">
-    <div v-for="(item, index) in historys" class="history-item">
-      <div class="name">
-        <p class="text" @click="selectCurItem(item, index)" v-html="item"></p>
+    <transition-group name="list" tag="div">
+      <div v-for="(item, index) in historys" class="history-item" :key="item">
+        <div class="name">
+          <p class="text" @click="selectCurItem(item, index)" v-html="item"></p>
+        </div>
+        <div class="icon">
+          <i @click="deleteItem(item, index)" class="icon-delete"></i>
+        </div>
       </div>
-      <div class="icon">
-        <i @click="deleteItem(item, index)" class="icon-delete"></i>
-      </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
@@ -22,6 +24,10 @@
       display: flex
       align-items: center
       padding-bottom: 20px
+      &.list-enter-active, &.list-leave-active
+        transition: all 0.1s
+      &.list-enter, &.list-leave-to
+        height: 0
       .name
         flex: 1
         font-size: $font-size-medium

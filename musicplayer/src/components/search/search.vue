@@ -30,10 +30,7 @@
       </scroll>
     </div>
     <div class="search-result" v-show="query" ref="searchResultList">
-      <search-list :list="query" @selectedItem="selectedItem" :totalnum="searchParams.totalnum" ref="searchListWrapper" @pullingUpFn="_addPageFn"></search-list>
-      <div class="loading-wrapper" v-show="loadingIcon">
-        <loading></loading>
-      </div>
+      <search-list :list="query" @selectedItem="selectedItem" ref="searchListWrapper" @pullingUpFn="_addPageFn"  :addPage="addPageIcon"></search-list>
     </div>
     <confirm ref="confirm" @clearHistory="clearSearchHistory" text="是否清空所有搜索历史" confirmSure="清空"></confirm>
     <router-view></router-view>
@@ -123,18 +120,15 @@
       return {
         query: null,
         hotKey: null,
-        val: '',
-        timer: null,
-        timer2: null,
-        loadingIcon: false,
         searchParams: {
           curPage: 1,
           searchTxt: '',
-          curNum: 20,
-          totalnum: 0
+          curNum: 20
         },
-        flag: true,
-        searchWord: null
+        searchWord: null,
+        pullUpTimer: null,
+        addPageIcon: false,
+        addPageFlag: true
       }
     },
     computed: {
@@ -156,6 +150,10 @@
       },
       queryResult (txt) {
         this.searchParams.searchTxt = txt
+        if (!txt) {
+          this.clearCnt()
+          return false
+        }
         this._getQueryInfo(txt)
       },
       selectHotKey (item) {
@@ -168,8 +166,7 @@
       },
       selectedItem (item, index) {
         let addSong = []
-        let newSong = searchCreateSong(item)
-        addSong = addSong.concat(newSong, this.playList)
+        addSong = addSong.concat(item, this.playList)
         this.saveSearchHistoryWord(this.searchWord)
         this.selectPlayer({
           'list': addSong,
@@ -192,41 +189,6 @@
         }
         this.$refs.confirm.show()
       },
-      _addPageFn () {
-        if (!this.flag) {
-          return false
-        }
-        this.flag = false
-        clearTimeout(this.timer2)
-        this.timer2 = setTimeout(() => {
-          this.searchParams.curPage += 1
-          getQueryInfo(this.searchParams).then((res) => {
-            if (res.code === ERROR_NUM) {
-              this.searchParams.curPage = res.data.song.curpage
-              this.searchParams.searchTxt = res.data.keyword
-              this._normalAddSearchResult(res.data)
-            }
-          })
-          this.flag = true
-        }, 1000)
-      },
-      _getQueryInfo (txt) {
-        clearTimeout(this.timer)
-        if (!txt) {
-          this.query = null
-          return false
-        }
-        this.flag = true
-        this.timer = setTimeout(() => {
-          this.loadingIcon = true
-          getQueryInfo(this.searchParams).then((res) => {
-            if (res.code === ERROR_NUM) {
-              this._normalSearchResultInfo(res.data)
-              this.searchParams.totalnum = res.data.song.totalnum
-            }
-          })
-        }, 600)
-      },
       _getHotSearchWords () {
         getHotSearchWords().then((res) => {
           if (res.code === ERROR_NUM) {
@@ -238,16 +200,48 @@
           }
         })
       },
-      _normalSearchResultInfo (data) {
-        this.query = data.song.list ? data.song.list : null
-        this.loadingIcon = false
+      _getQueryInfo (txt) {
+        this.addPageFlag = true
+        this.addPageIcon = false
+        this.searchParams.curPage = 1
+        getQueryInfo(this.searchParams).then((res) => {
+          if (res.code === ERROR_NUM) {
+            this._normalSearchResultInfo(res.data)
+          }
+        })
       },
-      _normalAddSearchResult (data) {
-        if (this.query === null) {
-          return false
-        }
-        this.query = data.song.list ? this.query.concat(data.song.list) : this.query
-        this.$refs.searchListWrapper.finishPullUpFn()
+      _addPageFn () {
+        if (!this.addPageFlag) return false
+        this.addPageIcon = true
+        this.$nextTick(() => {
+          this.$refs.searchListWrapper.refresh()
+        })
+        getQueryInfo(this.searchParams).then((res) => {
+          if (res.code === ERROR_NUM) {
+            if (res.subcode === ERROR_NUM) {
+              this._normalSearchResultInfo(res.data)
+            } else {
+              this.addPageFlag = false
+              this.addPageIcon = false
+              this.$refs.searchListWrapper.finishPullUpFn()
+            }
+          }
+        })
+      },
+      _normalSearchResultInfo (data) {
+        let list = []
+        data.song.list.forEach((song, index) => {
+          list.push(searchCreateSong(song))
+        })
+        this.query = this.query ? this.query.concat(list) : list
+        this.searchParams.curPage += 1
+        clearTimeout(this.pullUpTimer)
+        this.pullUpTimer = setTimeout(() => {
+          this.$nextTick(() => {
+            this.addPageIcon = false
+            this.$refs.searchListWrapper.finishPullUpFn()
+          })
+        }, 1000)
       },
       ...mapActions([
         'selectPlayer',

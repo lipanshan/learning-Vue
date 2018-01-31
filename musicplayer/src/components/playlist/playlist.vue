@@ -221,6 +221,7 @@
         let len = this.playList.length
         if (len <= 1) {
           this.deleteSongList()
+          this.toggleList = false
           return false
         }
         this.deleteSong(item)
@@ -230,6 +231,7 @@
       },
       clearPlayList () {
         this.deleteSongList()
+        this.toggleList = false
       },
       currentPlayIcon (item) {
         return item.id === this.currentSong.id ? 'icon-play' : ''
