@@ -21,19 +21,20 @@
               </div>
             </transition-group>
           </scroll>
-          <scroll class="list-scroll" v-show="!switchList" :data="searchWordList">
-            <transition-group name="list" tag="div">
-              <div @click="selectWord(wordItem, i)" v-for="(wordItem, i) in searchWordList" class="list-item" :key="wordItem">
-                <span  class="text">{{wordItem}}</span>
-                <span @click.stop="deleteWord(wordItem, i)" class="delete"><i class="icon-delete"></i></span>
-              </div>
-            </transition-group>
+          <scroll class="list-scroll search-wrod" v-show="!switchList" :data="searchWordList">
+            <history-list :historys="searchWordList" @select="selectWord" @delete="deleteWord"></history-list>
           </scroll>
         </div>
       </div>
       <div class="search-result" v-show="searchResultList">
         <search-result ref="searchResultWrap" :list="searchResultList" @pullingUpFn="loadSearchResult" :addPage="addPageIcon" @selectedItem="selectSongPlay"></search-result>
       </div>
+      <add-tip :delay="2000" ref="addTipWrap">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放列表</span>
+        </div>
+      </add-tip>
     </div>
   </transition>
 </template>
@@ -71,6 +72,13 @@
           color: $color-theme
     .search-box-wrapper
       margin: 20px
+    .search-wrod
+      .history-list
+        padding: 0 30px
+        .history-item
+          .icon
+            .icon-delete
+              color: #ffcd32
     .shortcut
       position: absolute
       left: 0
@@ -143,6 +151,17 @@
         .text
           font-size: $font-size-medium
           color: $color-text
+    .tip-title
+      text-align: center
+      padding: 18px 0
+      font-size: 0
+      .icon-ok
+        font-size: $font-size-medium
+        color: $color-theme
+        margin-right: 4px
+      .text
+        font-size: $font-size-medium
+        color: $color-text
 </style>
 <script type="text/ecmascript-6">
   import searchBox from 'base/search-box'
@@ -152,6 +171,8 @@
   import searchResult from 'components/search-result-list/search-result-list'
   import {getQueryInfo} from 'api/search'
   import {searchCreateSong} from 'common/js/song'
+  import historyList from 'components/history-list/history-list'
+  import addTip from 'base/add-tip'
   const ERROR_NUM = 0
   export default {
     data () {
@@ -165,7 +186,6 @@
           searchTxt: '',
           curNum: 20
         },
-        timer: null,
         pullUpTimer: null,
         addPageIcon: true,
         addPageFlag: true,
@@ -208,6 +228,7 @@
       },
       selectSong (song, index) {
         this.addSongToPlayList(song)
+        this.$refs.addTipWrap.show()
       },
       deleteSong (song, index) {
         this.deleteSearchHistorySong(song)
@@ -222,6 +243,7 @@
         this._getQueryInfo()
       },
       deleteWord (word, index) {
+        console.log(word)
         this.deleteSearchHistoryWord(word)
       },
       loadSearchResult () {
@@ -246,20 +268,18 @@
       },
       selectSongPlay (song, index) {
         this.addSongToPlayList(song)
+        this.$refs.addTipWrap.show()
       },
       _getQueryInfo () {
         this.addPageFlag = true
         this.addPageIcon = false
         this.searchParams.curPage = 1
-        clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-          getQueryInfo(this.searchParams).then((res) => {
-            if (res.code === ERROR_NUM) {
-              this.$refs.searchResultWrap.scrollStart()
-              this._normalSearchSong(res.data.song)
-            }
-          })
-        }, 600)
+        getQueryInfo(this.searchParams).then((res) => {
+          if (res.code === ERROR_NUM) {
+            this.$refs.searchResultWrap.scrollStart()
+            this._normalSearchSong(res.data.song)
+          }
+        })
       },
       _normalSearchSong (list, flag) {
         let normalList = []
@@ -297,7 +317,9 @@
       searchBox,
       switches,
       scroll,
-      searchResult
+      searchResult,
+      historyList,
+      addTip
     }
   }
 </script>

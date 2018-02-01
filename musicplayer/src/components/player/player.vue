@@ -560,6 +560,10 @@
         }
       },
       ready () {
+        this.$nextTick(() => {
+          const audio = this.$refs.audioTag
+          this.playing ? audio.play() : audio.pause()
+        })
         this.songReady = true
         if (this.lyric) {
           this.lyric.play()

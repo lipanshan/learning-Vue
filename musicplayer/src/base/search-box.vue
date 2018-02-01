@@ -70,7 +70,7 @@
         clearTimeout(this.queryTimer)
         this.queryTimer = setTimeout(() => {
           this.$emit('queryFn', this.search)
-        }, 800)
+        }, 600)
       },
       _blur () {
         this.focusStatus = false
