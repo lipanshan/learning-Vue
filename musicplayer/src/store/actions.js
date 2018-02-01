@@ -86,7 +86,7 @@ export const addSongToPlayList = function ({commit, state}, song) {
   })
   if (!flag) {
     let curSong = newPlayList.splice(curIndex, 1, song)
-    newPlayList.splice(curIndex, 1, curSong[0])
+    newPlayList.splice(curIndex, 0, curSong[0])
   }
   commit(types.SET_PLAYLIST, newPlayList)
   commit(types.SET_SEQUENCELIST, newPlayList)
