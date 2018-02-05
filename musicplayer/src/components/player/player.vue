@@ -367,7 +367,6 @@
         currentShow: 'cd',
         currentPlayingLyric: null,
         togglePlagList: false,
-        timer: null,
         autoPlayFlag: true
       }
     },
@@ -535,8 +534,8 @@
         }
         const audio = this.$refs.audioTag
         let audioFlag = !this.playing
+        this.setPlaying(audioFlag)
         this.$nextTick(() => {
-          this.setPlaying(audioFlag)
           audioFlag ? audio.play() : audio.pause()
         })
         if (this.lyric) {
@@ -558,9 +557,7 @@
       },
       triggerProgressChange (percent) {
         let currentTime = percent * this.songAllTime
-        this.$nextTick(() => {
-          this.$refs.audioTag.currentTime = currentTime
-        })
+        this.$refs.audioTag.currentTime = currentTime
         this.setPlaying(true)
         if (this.lyric) {
           this.lyric.stop()
@@ -584,10 +581,8 @@
         }
       },
       loop () {
-        this.$nextTick(() => {
-          this.$refs.audioTag.currentTime = 0
-          this.$refs.audioTag.play()
-        })
+        this.$refs.audioTag.currentTime = 0
+        this.$refs.audioTag.play()
         if (this.lyric) {
           this.lyric.stop()
           this.lyric.play()
@@ -654,9 +649,7 @@
         if (!this.autoPlayFlag) {
           return false
         }
-        this.$nextTick(() => {
-          this.$refs.audioTag.play()
-        })
+        this.$refs.audioTag.play()
         this.autoPlayFlag = false
       },
       playFn () {
