@@ -92,3 +92,18 @@ export const addSongToPlayList = function ({commit, state}, song) {
   commit(types.SET_SEQUENCELIST, newPlayList)
   commit(types.SET_PLAYING, state.playing)
 }
+export const changePlayMode = function ({commit, state}, index) {
+  let currentSong = state.playList[state.currentIndex]
+  let list = state.sequenceList.slice()
+  if (index === 0) {
+    commit(types.SET_CURRENTINDEX, findIndex(list, currentSong))
+    commit(types.SET_PLAYLIST, list)
+  } else if (index === 1) {
+    commit(types.SET_CURRENTINDEX, findIndex(list, currentSong))
+  } else if (index === 2) {
+    let randomList = randowArray(list)
+    commit(types.SET_CURRENTINDEX, findIndex(randomList, currentSong))
+    commit(types.SET_PLAYLIST, randomList)
+  }
+  commit(types.SET_MODE, index)
+}

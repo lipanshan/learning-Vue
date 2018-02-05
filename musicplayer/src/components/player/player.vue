@@ -1,5 +1,5 @@
 <template>
- <div class="player" v-show="playList.length">
+ <div class="player" @touchstart="autoPlay"  v-show="playList.length">
    <transition name="normal"
                @enter="enter"
                @after-enter="afterEnter"
@@ -22,8 +22,8 @@
             @touchend="touchEnd">
          <div class="middle-l" ref="cdWrapper">
            <div class="cd-wrapper" ref="cdImageWrapper">
-             <div class="cd" :class="cdClass" >
-               <img class="image" :src="currentSong.image">
+             <div class="cd">
+               <img class="image" :class="cdClass" :src="currentSong.image">
              </div>
            </div>
            <div class="playing-lyric-wrapper">
@@ -90,10 +90,9 @@
        </div>
      </div>
    </transition>
-   <audio ref="audioTag" :src="currentSongUrl" @canplay="ready" @timeupdate="updateTime" @ended="playEnd" @error="audioError">
-     <source :src="currentSongUrl" type="audio/ogg">
-     <source :src="currentSongUrl" type="audio/mpeg">
-   </audio>
+   <audio ref="audioTag" :src="currentSongUrl" @play="playFn" @canplay="ready" @timeupdate="updateTime" @ended="playEnd" @error="audioError"></audio>
+
+
    <song-list ref="songList"></song-list>
  </div>
 </template>
@@ -172,21 +171,18 @@
               box-sizing: border-box
               border: 10px solid rgba(255, 255, 255, 0.1)
               border-radius: 50%
-              &.play
-                animation: rotate 20s linear infinite forwards
-              &.pause
-                animation-play-state: paused
               .image
-                position: absolute
-                left: 0
-                top: 0
                 width: 100%
                 height: 100%
                 border-radius: 50%
+                &.play
+                  animation: rotateImage 20s linear infinite forwards
+                &.pause
+                  animation-play-state: paused
 
           .playing-lyric-wrapper
             width: 80%
-            margin: 30px auto 0 auto
+            margin: 15px auto 0
             overflow: hidden
             text-align: center
             .playing-lyric
@@ -213,7 +209,7 @@
                 color: $color-text
       .bottom
         position: absolute
-        bottom: 50px
+        bottom: 25px
         width: 100%
         .dot-wrapper
           text-align: center
@@ -243,8 +239,10 @@
             line-height: 30px
             width: 30px
             &.time-l
+              padding-right: 5px
               text-align: left
             &.time-r
+              padding-right: 5px
               text-align: right
           .progress-bar-wrapper
             flex: 1
@@ -300,7 +298,7 @@
       img
         border-radius: 50%
         &.play
-          animation: rotate 10s linear infinite forwards
+          animation: rotateImage 10s linear infinite
         &.pause
           animation-play-state: paused
     .text
@@ -332,11 +330,12 @@
         left: 0
         top: 0
 
-    @keyframes rotate
+    @keyframes rotateImage
       0%
         transform: rotate(0)
       100%
         transform: rotate(360deg)
+
 </style>
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations, mapActions} from 'vuex'
@@ -346,7 +345,6 @@
   import progressBar from 'base/progress-bar'
   import circleProgress from 'base/circle-progress'
   import {playMode} from '../../store/config'
-  import {randowArray, findIndex} from 'common/js/randomarray'
   import {Base64} from 'js-base64'
   import Lyric from 'lyric-parser'
   import scroll from 'base/scroll'
@@ -368,7 +366,9 @@
         currentLineNum: 0,
         currentShow: 'cd',
         currentPlayingLyric: null,
-        togglePlagList: false
+        togglePlagList: false,
+        timer: null,
+        autoPlayFlag: true
       }
     },
     created () {
@@ -448,15 +448,6 @@
         if (n.id !== undefined) {
           this.saveSearchHistorySong(n)
         }
-      },
-      playing (newPlaying) {
-        if (!this.songReady) {
-          return
-        }
-        this.$nextTick(() => {
-          const audio = this.$refs.audioTag
-          newPlaying ? audio.play() : audio.pause()
-        })
       }
     },
     methods: {
@@ -510,60 +501,49 @@
         if (!this.songReady) {
           return false
         }
-        if (this.playList.length === 1) {
-          this.loop()
-        } else {
-          let index = this.currentIndex + 1
-          if (index >= this.playList.length) {
-            index = 0
-          }
-          this.setCurrentIndex(index)
-          this.$nextTick(() => {
-            this.setPlaying(true)
-          })
-          this.songReady = false
-          if (this.lyric) {
-            this.lyric.stop()
-            this.lyric.play()
-          }
+        this.songReady = false
+        if (this.lyric) {
+          this.lyric.stop()
+          this.lyric.play()
         }
+        let index = this.currentIndex + 1
+        if (index >= this.playList.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        this.setPlaying(true)
       },
       prev () {
         if (!this.songReady) {
           return false
         }
-        if (this.playList.length === 1) {
-          this.loop()
-        } else {
-          let index = this.currentIndex - 1
-          if (index < 0) {
-            index = this.playList.length - 1
-          }
-          this.setCurrentIndex(index)
-          this.$nextTick(() => {
-            this.setPlaying(true)
-          })
-          if (this.lyric) {
-            this.lyric.stop()
-            this.lyric.play()
-          }
-          this.songReady = false
+        this.songReady = false
+        if (this.lyric) {
+          this.lyric.stop()
+          this.lyric.play()
         }
+        let index = this.currentIndex - 1
+        if (index <= 0) {
+          index = this.playList.length - 1
+        }
+        this.setCurrentIndex(index)
+        this.setPlaying(true)
       },
       togglePlay () {
         if (!this.songReady) {
           return false
         }
-        this.setPlaying(!this.playing)
+        const audio = this.$refs.audioTag
+        let audioFlag = !this.playing
+        this.$nextTick(() => {
+          this.setPlaying(audioFlag)
+          audioFlag ? audio.play() : audio.pause()
+        })
         if (this.lyric) {
           this.lyric.togglePlay()
         }
       },
       ready () {
-        this.$nextTick(() => {
-          const audio = this.$refs.audioTag
-          this.playing ? audio.play() : audio.pause()
-        })
         this.songReady = true
         if (this.lyric) {
           this.lyric.play()
@@ -578,7 +558,9 @@
       },
       triggerProgressChange (percent) {
         let currentTime = percent * this.songAllTime
-        this.$refs.audioTag.currentTime = currentTime
+        this.$nextTick(() => {
+          this.$refs.audioTag.currentTime = currentTime
+        })
         this.setPlaying(true)
         if (this.lyric) {
           this.lyric.stop()
@@ -588,18 +570,10 @@
       changeMode () {
         let index = this.mode + 1
         index = index % MODE_NUM
-        this.setPlayMode(index)
-        let list = null
-        if (this.mode === playMode.random) {
-          list = randowArray(this.sequenceList)
-        } else {
-          list = this.sequenceList
-        }
-        this.setCurrentIndex(findIndex(list, this.currentSong))
-        this.setPlayList(list)
+        this.changePlayMode(index)
         if (this.lyric) {
-          this.lyric.stop()
-          this.lyric.play()
+          this.lyric.togglePlay()
+          this.lyric.togglePlay()
         }
       },
       playEnd () {
@@ -610,8 +584,10 @@
         }
       },
       loop () {
-        this.$refs.audioTag.currentTime = 0
-        this.$refs.audioTag.play()
+        this.$nextTick(() => {
+          this.$refs.audioTag.currentTime = 0
+          this.$refs.audioTag.play()
+        })
         if (this.lyric) {
           this.lyric.stop()
           this.lyric.play()
@@ -674,10 +650,26 @@
       toggleFavorite () {
         this.storageFavorite(this.currentSong)
       },
+      autoPlay () {
+        if (!this.autoPlayFlag) {
+          return false
+        }
+        this.$nextTick(() => {
+          this.$refs.audioTag.play()
+        })
+        this.autoPlayFlag = false
+      },
+      playFn () {
+        this.songReady = true
+      },
       _formatSongTime (t) {
-        let m = Math.floor(t / 60)
-        let s = Math.floor(t % 60)
-        return m + ':' + s
+        let m = '00' + Math.floor(t / 60)
+        let mLen = '' + Math.floor(t / 60)
+        let min = m.substring(mLen.length, mLen.length + 2)
+        let s = '00' + Math.floor(t % 60)
+        let sLen = '' + Math.floor(t % 60)
+        let sec = s.substring(sLen.length, sLen.length + 2)
+        return min + ':' + sec
       },
       _formatLyric () {
         if (this.lyric) {
@@ -715,14 +707,14 @@
         setFullScreen: 'SET_FULLSCREEM',
         setPlaying: 'SET_PLAYING',
         setCurrentIndex: 'SET_CURRENTINDEX',
-        setPlayMode: 'SET_MODE',
         setPlayList: 'SET_PLAYLIST'
       }),
       ...mapActions([
         'loadStorageFavorite',
         'storageFavorite',
         'loadSearchHistorySong',
-        'saveSearchHistorySong'
+        'saveSearchHistorySong',
+        'changePlayMode'
       ])
     },
     components: {
