@@ -22,8 +22,8 @@
             @touchend="touchEnd">
          <div class="middle-l" ref="cdWrapper">
            <div class="cd-wrapper" ref="cdImageWrapper">
-             <div class="cd">
-               <img class="image" :class="cdClass" :src="currentSong.image">
+             <div class="cd" ref="bigImageWrapper">
+               <img ref="bigImage" class="image" :class="cdClass" :src="currentSong.image">
              </div>
            </div>
            <div class="playing-lyric-wrapper">
@@ -76,7 +76,9 @@
    <transition name="mini">
      <div v-show="!fullScreen" @click="fullScreenChange" class="mini-player">
       <div class="icon" ref="miniImageWrapper">
-        <img :src="currentSong.image" :class="cdClass" width="40" height="40" alt="">
+        <div ref="miniImageWrap">
+          <img :src="currentSong.image" ref="miniImage" :class="cdClass" width="40" height="40" alt="">
+        </div>
       </div>
        <div class="text">
          <h2 class="name" v-html="currentSong.name"></h2>
@@ -91,12 +93,10 @@
      </div>
    </transition>
    <audio ref="audioTag" :src="currentSongUrl" @play="playFn" @canplay="ready" @timeupdate="updateTime" @ended="playEnd" @error="audioError"></audio>
-
-
    <song-list ref="songList"></song-list>
  </div>
 </template>
-<style lang="sass" type="text/css" rel="stylesheet/sass" scoped>
+<style lang="sass" type="text/css" rel="stylesheet/sass">
   @import '../../common/sass/variable'
   @import '../../common/sass/mixin'
 
@@ -176,9 +176,9 @@
                 height: 100%
                 border-radius: 50%
                 &.play
-                  animation: rotateImage 20s linear infinite forwards
-                &.pause
-                  animation-play-state: paused
+                  animation: rotateImage 20s linear infinite
+                  &.pause
+                    animation-play-state: paused
 
           .playing-lyric-wrapper
             width: 80%
@@ -294,13 +294,17 @@
     .icon
       flex: 0 0 40px
       width: 40px
+      height: 40px
       padding: 0 10px 0 20px
-      img
-        border-radius: 50%
-        &.play
-          animation: rotateImage 10s linear infinite
-        &.pause
-          animation-play-state: paused
+      & > div
+        width: 40px
+        height: 40px
+        img
+          border-radius: 50%
+          &.play
+            animation: rotateImage 10s linear infinite
+          &.pause
+            animation-play-state: paused
     .text
       display: flex
       flex-direction: column
@@ -331,8 +335,6 @@
         top: 0
 
     @keyframes rotateImage
-      0%
-        transform: rotate(0)
       100%
         transform: rotate(360deg)
 
@@ -388,7 +390,17 @@
         'favoriteList'
       ]),
       cdClass () {
-        return this.playing ? 'play' : 'play pause'
+        if (!this.playing && this.$refs.bigImage && this.$refs.bigImageWrapper) {
+          let iTransition = window.getComputedStyle(this.$refs.bigImage).transform
+          let cTransition = window.getComputedStyle(this.$refs.bigImageWrapper).transform
+          this.$refs.bigImageWrapper.style.transform = cTransition === 'none' ? iTransition : iTransition.concat('', cTransition)
+        }
+        if (!this.playing && this.$refs.miniImageWrap && this.$refs.miniImage) {
+          let iTransition = window.getComputedStyle(this.$refs.miniImage).transform
+          let cTransition = window.getComputedStyle(this.$refs.miniImageWrap).transform
+          this.$refs.miniImageWrap.style.transform = cTransition === 'none' ? iTransition : iTransition.concat('', cTransition)
+        }
+        return this.playing ? 'play' : 'pause'
       },
       playIcon () {
         return this.playing ? 'icon-pause' : 'icon-play'
@@ -535,9 +547,7 @@
         const audio = this.$refs.audioTag
         let audioFlag = !this.playing
         this.setPlaying(audioFlag)
-        this.$nextTick(() => {
-          audioFlag ? audio.play() : audio.pause()
-        })
+        audioFlag ? audio.play() : audio.pause()
         if (this.lyric) {
           this.lyric.togglePlay()
         }
