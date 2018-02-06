@@ -1,7 +1,7 @@
 import jsonp from 'common/js/jsonp'
 import {options} from 'common/js/options'
 import axios from 'axios'
-const songNumber = 10
+const songNumber = 20
 export function getSingerList (pageNum) {
   const urls = 'https://c.y.qq.com/v8/fcg-bin/v8.fcg'
   pageNum = pageNum | 1

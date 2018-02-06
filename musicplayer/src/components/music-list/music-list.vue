@@ -6,17 +6,16 @@
       </div>
       <h1 class="title" v-html="title"></h1>
       <div ref="bgImageTag" class="bg-image" :style="backgroundImage">
-        <div ref="fliterTag" class="filter"></div>
-        <div v-show="playBtn && list && list.length" class="play-wrapper">
-          <div class="play" @click="randomPlay">
-            <i class="icon-play"></i>
-            <span class="text">随机播放全部</span>
-          </div>
+        <div v-show="playBtn && list && list.length" ref="playWrapper" class="play-wrapper">
+        <div class="play" @click="randomPlay">
+          <i class="icon-play"></i>
+          <span class="text">随机播放全部</span>
         </div>
+      </div>
       </div>
       <loading v-show="!list || !list.length" class="loading" slot="loading"></loading>
       <div ref="bgLayer" class="bg-layer"></div>
-      <scroll v-if="list" :list="list" :class="{'overflowHidden': switchClass}" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
+      <scroll v-if="list" :list="list" class="list" :probeType="probeType"  @scrollEvent="listenScroll" :style="calculateListTop" ref="scrollList">
         <song-list :rankIconShow="rankIcon" :list="list" @select="selectItem"></song-list>
       </scroll>
     </div>
@@ -73,7 +72,6 @@
       .play-wrapper
         position: absolute
         bottom: 20px
-        z-index: 50
         width: 100%
         .play
           box-sizing: border-box
@@ -103,9 +101,6 @@
       top: 40px
       bottom: 0
       width: 100%
-      background: $color-background
-      &.overflowHidden
-        overflow: hidden
       .song-list-wrapper
         padding: 20px 30px
         .loading-container
@@ -123,10 +118,10 @@
   import {mixinPlayer} from 'common/js/mixin'
 
   const transform = prefixStyle('transform')
-  const backdrop = prefixStyle('backdrop-filter')
+//  const backdrop = prefixStyle('backdrop-filter')
   const TOP_LEN = 40
-  const IMG_HEIGHT = 70
-  const BLUR_MAX_VAL = 250
+//  const IMG_HEIGHT = 70
+//  const BLUR_MAX_VAL = 250
   export default {
     mixins: [mixinPlayer],
     props: {
@@ -154,8 +149,8 @@
         probeType: 3,
         scrollYMax: 0,
         scrollY: 0,
-        switchClass: true,
-        playBtn: true
+        playBtn: true,
+        switchFlag: false
       }
     },
     computed: {
@@ -175,26 +170,25 @@
       'scrollY' (pos) {
         let y = Math.max(pos, -this.scrollYMax)
         this.$refs.bgLayer.style[transform] = `translate3d(0, ${y}px, 0)`
-        this.switchClass = pos > 0
-        if (pos < -this.scrollYMax) {
-          this.$refs.bgImageTag.style.zIndex = 10
-          this.$refs.bgImageTag.style.paddingTop = `${TOP_LEN}px`
-          this.playBtn = false
+        if (Math.abs(y) >= this.scrollYMax) {
+          this.$refs.bgImageTag.style.paddingTop = 0
+          this.$refs.bgImageTag.style.zIndex = 1
+          this.$refs.bgImageTag.style.height = `${TOP_LEN}px`
+          this.$refs.playWrapper.style.display = 'none'
         } else {
-          this.playBtn = true
-          if (pos > 3) {
-            let percent = 1 + pos / (pos + this.scrollYMax)
-            this.$refs.bgImageTag.style[transform] = `scaleY(${percent})`
-            this.$refs.bgImageTag.style.zIndex = 10
-            this.$refs.fliterTag.style.display = 'block'
-            this.$refs.fliterTag.style[backdrop] = `blur(${Math.max(BLUR_MAX_VAL, pos)}px)`
-          } else {
-            this.$refs.bgImageTag.style.paddingTop = `${IMG_HEIGHT}%`
-            this.$refs.bgImageTag.style.transform = 'scaleY(1)'
-            this.$refs.bgImageTag.style.zIndex = 0
-            this.$refs.fliterTag.style[backdrop] = 'blur(0)'
-            this.$refs.fliterTag.style.display = 'none'
-          }
+          this.$refs.bgImageTag.style.paddingTop = '70%'
+          this.$refs.bgImageTag.style.zIndex = 0
+          this.$refs.bgImageTag.style.height = 0
+          this.$refs.playWrapper.style.display = 'block'
+        }
+        if (pos > 0) {
+          let imageRect = this.$refs.bgImageTag.getBoundingClientRect()
+          let scaleVal = (pos + imageRect.height) / imageRect.height
+          this.$refs.bgImageTag.style[transform] = `scale(${scaleVal})`
+          this.$refs.bgLayer.style[transform] = `translate3d(0, ${y + pos}px, 0)`
+        } else {
+          this.$refs.bgImageTag.style[transform] = 'scale(1)'
+          this.$refs.bgLayer.style[transform] = `translate3d(0, ${y}px, 0)`
         }
       },
       'list' (n, o) {
