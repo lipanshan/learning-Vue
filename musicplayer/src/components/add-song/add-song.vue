@@ -29,10 +29,10 @@
       <div class="search-result" v-show="searchResultList">
         <search-result ref="searchResultWrap" :list="searchResultList" @pullingUpFn="loadSearchResult" :addPage="addPageIcon" @selectedItem="selectSongPlay"></search-result>
       </div>
-      <add-tip :delay="2000" ref="addTipWrap">
+      <add-tip :delay="600" ref="addTipWrap">
         <div class="tip-title">
           <i class="icon-ok"></i>
-          <span class="text">1首歌曲已经添加到播放列表</span>
+          <span class="text">{{addSongTxt}}</span>
         </div>
       </add-tip>
     </div>
@@ -100,8 +100,7 @@
           padding: 20px 30px
           display: flex
           align-items: center
-          min-height: 40px
-          line-height: 40px
+          height: 64px
           padding: 0 30px
           overflow: hidden
           &.list-enter-active, &.list-leave-active
@@ -189,7 +188,8 @@
         pullUpTimer: null,
         addPageIcon: true,
         addPageFlag: true,
-        inputWords: ''
+        inputWords: '',
+        addSongTxt: '1首歌曲已经添加到播放列表'
       }
     },
     created () {
@@ -198,7 +198,8 @@
     computed: {
       ...mapGetters([
         'searchSongList',
-        'searchWordList'
+        'searchWordList',
+        'playList'
       ])
     },
     methods: {
@@ -243,7 +244,6 @@
         this._getQueryInfo()
       },
       deleteWord (word, index) {
-        console.log(word)
         this.deleteSearchHistoryWord(word)
       },
       loadSearchResult () {

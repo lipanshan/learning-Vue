@@ -22,9 +22,8 @@
     background-color: $color-background
     .history-item
       display: flex
-      height: 14px
+      height: 34px
       align-items: center
-      padding-bottom: 20px
       &.list-enter-active, &.list-leave-active
         transition: all 0.1s
       &.list-enter, &.list-leave-to
