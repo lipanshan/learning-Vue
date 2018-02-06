@@ -63,8 +63,9 @@
       right: 0
       top: 50%
       transform: translateY(-50%)
+      margin-right: 16px
       width: 20px
-      padding: 20px 0
+      padding: 2px 0
       border-radius: 10px
       text-align: center
       background: $color-background-d
@@ -172,7 +173,7 @@
         this.current = Number(serialNum1)
       },
       scrollEvent (pos) {
-        this.scrollY = Math.abs(pos.y)
+        this.scrollY = pos.y
         this._initListHeight()
         this.$nextTick(() => {
           let y = Math.abs(pos.y)
@@ -202,20 +203,22 @@
       }
     },
     watch: {
-      'scrollY' (n, o) {
-        let nextTitle = this.$refs.listGroup.getElementsByClassName('list-group-title-hook')[this.current + 1]
-        if (!nextTitle) {
-          return
-        }
-        let pos1 = nextTitle.getBoundingClientRect().top
+      'scrollY' (newY, oldY) {
         let fixedTag = this.$refs.fixedTitleTag
-        let dis = pos1 - FIXEDTITLE_TOP
-        if (dis < 0) {
-          fixedTag.style.transform = 'translate3d(0, 0, 0)'
+        if (newY > 0) {
+          fixedTag.style.transform = 'translate3d(0,-100%, 0)'
           return
         }
-        if (dis <= FIXEDTITLE_H) {
+        let n = this.current + 1
+        let nextTitles = this.$refs.listGroup.getElementsByClassName('list-group-title-hook')
+        n = n >= nextTitles.length ? nextTitles.length - 1 : n
+        let nextTitle = this.$refs.listGroup.getElementsByClassName('list-group-title-hook')[n]
+        let pos1 = nextTitle.getBoundingClientRect().top
+        let dis = pos1 - FIXEDTITLE_TOP
+        if (dis > 0 && dis <= FIXEDTITLE_H) {
           fixedTag.style.transform = `translate3d(0, -${FIXEDTITLE_H - dis}px, 0)`
+        } else {
+          fixedTag.style.transform = 'translate3d(0,0, 0)'
         }
       }
     },

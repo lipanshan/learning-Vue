@@ -56,7 +56,14 @@
           if (!serialGroup[value.Findex]) {
             serialGroup[value.Findex] = {
               title: value.Findex,
-              item: []
+              item: [
+                {
+                  title: value.Findex,
+                  id: value.Fsinger_mid,
+                  name: value.Fsinger_name,
+                  avatar: `http://y.gtimg.cn/music/photo_new/T001R150x150M000${value.Fsinger_mid}.jpg?max_age=2592000`
+                }
+              ]
             }
           } else {
             serialGroup[value.Findex].item.push({
