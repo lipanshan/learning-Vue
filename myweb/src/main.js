@@ -3,9 +3,9 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-
+import vueTouch from 'vue-touch';
 import '@/common/reset';
-
+Vue.use(vueTouch, {name: 'v-touch'});
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

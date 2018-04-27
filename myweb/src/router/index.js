@@ -1,14 +1,14 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import main from '@/components/main';
-import mobile from '@/components/mobile/mobile';
-import about from '@/components/about';
-import pc from '@/components/pc/pc';
+import home from '@/components/home';
+import homeTxt from '@/components/home-txt';
+import answerResult from '@/components/answerResult';
+import rankingList from '@/components/ranking';
 
 Vue.use(Router);
 
 export default new Router({
-  'mode': 'history',
   routes: [
     {
       path: '/index',
@@ -16,19 +16,24 @@ export default new Router({
       component: main
     },
     {
-      path: '/mobile',
-      name: 'mobile',
-      component: mobile
+      path: '/home',
+      name: 'home',
+      component: home
     },
     {
-      path: '/about',
-      name: 'about',
-      component: about
+      path: '/home2',
+      name: 'homeTxt',
+      component: homeTxt
     },
     {
-      path: '/pc',
-      name: 'pc',
-      component: pc
+      path: '/result',
+      name: 'answerResult',
+      component: answerResult
+    },
+    {
+      path: '/ranking',
+      name: 'rankingList',
+      component: rankingList
     },
     {
       path: '*',

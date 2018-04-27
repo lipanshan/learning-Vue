@@ -11,8 +11,11 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "better-scroll": "^1.10.0",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-concise-slider": "^2.4.8",
+    "vue-router": "^3.0.1",
+    "vue-touch": "^2.0.0-beta.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
