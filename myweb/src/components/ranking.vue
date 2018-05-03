@@ -13,7 +13,7 @@
         <div class="title"></div>
       </div>
       <div class="list-wrap" ref="listWrap">
-        <transition-group name="fade" class="list" tag="ul">
+        <transition-group name="flip-list" class="list" tag="ul">
           <li v-show="item.show" v-for="(item, index) in list" class="item" :class="{'red': item.title.substring(2) <= 3}" :key="index">
             <v-touch class="cnt" :class="{'cnt-move': item.delete}" tag="div" @swipeleft="onSwipeLeft(item)" @swiperight="onSwipeRight(item)" >
               <p class="num">{{item.title.substring(2)}}</p>
@@ -146,8 +146,7 @@
           padding-right: 15px;
           .item {
             position: relative;
-            transition: all 0.4s;
-            height: 70px;
+            display: block;
             .cnt {
               position: relative;
               z-index: 10;
@@ -225,11 +224,10 @@
       }
     }
   }
-  .fade-leave-to {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-
+.flip-list-leave-active {
+  transition: all 0.4s;
+  transform: translate3d(-100%, 0, 0);
+}
 </style>
 <script type="text/ecmascript-6">
 import Bscroll from 'better-scroll';
@@ -269,13 +267,6 @@ export default {
         }
       });
       this.scroll.on('pullingDown', () => {
-        let arr = [];
-        this.ranking(this.list).forEach((value) => {
-          if (value.show) {
-            arr.push(value);
-          }
-        });
-        this.list = arr;
         this.$refs.messageWrap.style.transform = 'translateY(0)';
         this.$refs.messageWrap.style.webkitTransform = 'translateY(0)';
         setTimeout(() => {
@@ -309,22 +300,6 @@ export default {
     },
     deleteFn (index) {
       this.list[index].show = false;
-    },
-    ranking (arr) {
-      if (arr.length <= 1) {
-        return arr;
-      }
-      let centerIndex = Math.floor(arr.length / 2);
-      let leftArr = [];
-      let rightArr = [];
-      arr.forEach((value, index) => {
-        if (Number(arr[centerIndex].title.substring(2)) > Number(value.title.substring(2))) {
-          leftArr.push(value);
-        } else if (Number(arr[centerIndex].title.substring(2)) < Number(value.title.substring(2))) {
-          rightArr.push(value);
-        }
-      });
-      return this.ranking(leftArr).concat(arr[centerIndex]).concat(rightArr);
     }
   },
   components: {

@@ -27,7 +27,7 @@
     background-size: 100% 100%;
     transition: all 0.4s;
     &.fade-enter, &.fade-leave-to {
-      transform: translate3d(0, -100%, 0);
+      transform: translate3d(0, 100%, 0);
     }
     .rules {
       position: absolute;

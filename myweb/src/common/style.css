@@ -1,0 +1,10 @@
+/* 迷你简字体 */
+@font-face {
+  font-family: minijian;
+  src: url('./font/minijian.ttf')
+}
+/* 迷你简字体 */
+@font-face {
+  font-family: kuaile;
+  src: url('./font/kuaile.ttf')
+}
