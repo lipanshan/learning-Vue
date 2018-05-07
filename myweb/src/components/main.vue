@@ -1,15 +1,18 @@
 <template>
-  <div class="loading-wrap">
-    <div class="loading-content">
-      <div class="loading-icon">
-        <my-circle :size="circle.size" :color1="circle.color1" :color2="circle.color2" :progress="progress"></my-circle>
-      </div>
-      <div class="loading-txt">
-        <p>{{progress}}%</p>
-        <p>加载中</p>
+  <transition name="fade">
+    <div class="loading-wrap">
+      <div class="loading-content">
+        <div class="loading-icon">
+          <my-circle :size="circle.size" :color1="circle.color1" :color2="circle.color2"
+                     :progress="progress"></my-circle>
+        </div>
+        <div class="loading-txt">
+          <p>{{progress}}%</p>
+          <p>加载中</p>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -22,8 +25,30 @@ export default {
         color1: '#0e0e0e',
         color2: '#bfbaba'
       },
-      progress: 50
+      timer: null,
+      progress: 0
     };
+  },
+  mounted () {
+    this.progressFn();
+  },
+  methods: {
+    progressFn () {
+      this.progress = Math.ceil(Math.random() * 30);
+      this.timer = setInterval(() => {
+        if (Math.ceil(Math.random() * 10 + this.progress) >= 100) {
+          this.progress = 100;
+          clearInterval(this.timer);
+          setTimeout(() => {
+            this.$router.push({
+              path: 'home'
+            });
+          }, 400);
+        } else {
+          this.progress = Math.ceil(Math.random() * 10 + this.progress);
+        }
+      }, 200);
+    }
   },
   components: {
     myCircle
@@ -41,6 +66,10 @@ export default {
     left: 0;
     z-index: 10;
     background: #000000;
+    transition: all 0.4s;
+    &.fade-enter, &.fade-leave-to {
+      opacity: 0;
+    }
 
     .loading-content {
       position: absolute;

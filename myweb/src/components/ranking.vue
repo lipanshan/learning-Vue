@@ -2,7 +2,7 @@
   <div class="ranking-wrap">
      <header>
        <h1></h1>
-       <div class="button-wrap">
+       <div @click="showQrcode" class="button-wrap">
          <div class="button"></div>
        </div>
      </header>
@@ -32,6 +32,7 @@
         <div ref="messageIcon2" class="message-icon message2"><i class="icon icon-rotate"></i></div>
       </div>
     </div>
+    <qrcode ref="qrcodeWrap"></qrcode>
   </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -250,10 +251,14 @@
         }
       }
     }
+    &.fade-enter,&.fade-leave-to {
+      transform: translate3d(100%, 0, 0) scale(0.01);
+    }
   }
 </style>
 <script type="text/ecmascript-6">
 import Bscroll from 'better-scroll';
+import qrcode from '@/components/qrcode';
 export default {
   name: 'rankingList',
   data () {
@@ -365,10 +370,14 @@ export default {
     },
     deleteFn (index) {
       this.list.splice(index, 1);
+    },
+    showQrcode () {
+      this.$refs.qrcodeWrap.show();
     }
   },
   components: {
-    Bscroll
+    Bscroll,
+    qrcode
   }
 };
 </script>

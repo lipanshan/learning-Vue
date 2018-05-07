@@ -26,6 +26,7 @@
       <div @click="openEnvelope()" v-show="envelope" class="envelope"></div>
     </transition>
     <div class="bottom-title"></div>
+    <audio ref="audioTag" @canplay="_ready" @ended="_ended" @play="_play" src="./static/music/typer.mp3" @error="_error"></audio>
   </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -149,7 +150,11 @@ export default {
     return {
       envelope: true,
       txtTop: '',
-      txtBottom: ''
+      txtBottom: '',
+      canPlay: false,
+      timer1: null,
+      timer2: null,
+      nextPageFlag: false
 
     };
   },
@@ -158,9 +163,12 @@ export default {
       this.envelope = false;
     },
     nextPage () {
+      if (!this.nextPageFlag) return false;
       this.$router.push({
         path: '/home2'
       });
+      clearInterval(this.timer1);
+      clearInterval(this.timer2);
     },
     _beforeEnter (el) {
       let line = el.querySelector('.line');
@@ -180,29 +188,50 @@ export default {
         let line = el.querySelector('.line');
         line.style.transform = 'scaleX(1)';
         line.style.webkitTransform = 'scaleX(1)';
-        this._typerFn(txtTel, this.txtTop);
-        this._typerFn(txtBel, this.txtBottom);
+        this._typerFn(txtTel, this.txtTop, this.timer1);
+        this._typerFn(txtBel, this.txtBottom, this.timer2);
       });
       done();
     },
-    _typerFn (el, str) {
-      let timer = null;
+    _typerFn (el, str, timer) {
       let len = 0;
       let line = '';
-      return (() => {
-        timer = setInterval(() => {
-          if (len >= str.length) {
-            clearInterval(timer);
-          }
-          if (str.charAt(len) === '<') {
-            len = str.indexOf('>', len);
-          } else {
-            len++;
-          }
-          line = len >= str.length ? '' : (len % 2 ? '' : '_');
-          el.innerHTML = str.substring(0, len) + line;
-        }, 200);
-      })();
+      this.nextPageFlag = false;
+      timer = setInterval(() => {
+        if (len >= str.length) {
+          this._pause();
+          clearInterval(timer);
+          this.nextPageFlag = true;
+          return false;
+        }
+
+        if (str.charAt(len) === '<') {
+          len = str.indexOf('>', len);
+          this._pause();
+        } else {
+          this._play();
+          len++;
+        }
+        line = len >= str.length ? '' : (len % 2 ? '' : '_');
+        el.innerHTML = str.substring(0, len) + line;
+      }, 200);
+    },
+    _ready () {
+      this.canPlay = true;
+    },
+    _ended () {
+      this.$refs.audioTag.currentTime = 0;
+    },
+    _pause () {
+      if (!this.canPlay) return false;
+      this.$refs.audioTag.pause();
+    },
+    _play () {
+      if (!this.canPlay) return false;
+      this.$refs.audioTag.play();
+    },
+    _error (msg) {
+      console.log(msg);
     }
   }
 };
