@@ -5,6 +5,7 @@ import home from '@/components/home';
 import homeTxt from '@/components/home-txt';
 import answerResult from '@/components/answerResult';
 import rankingList from '@/components/ranking';
+import rankingList2 from '@/components/ranking2';
 
 Vue.use(Router);
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/ranking',
       name: 'rankingList',
       component: rankingList
+    },
+    {
+      path: '/ranking2',
+      name: 'rankingList2',
+      component: rankingList2
     },
     {
       path: '*',

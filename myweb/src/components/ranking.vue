@@ -13,8 +13,8 @@
         <div class="title"></div>
       </div>
       <div class="list-wrap" ref="listWrap">
-        <transition-group name="flip-list" class="list" tag="ul">
-          <li v-show="item.show" v-for="(item, index) in list" class="item" :class="{'red': item.title.substring(2) <= 3}" :key="index">
+        <transition-group name="flip-list" class="list" tag="ul" ref="contentWrap">
+          <li v-for="(item, index) in list" class="item" :class="{'red': item.title.substring(2) <= 3}" :key="item.title">
             <v-touch class="cnt" :class="{'cnt-move': item.delete}" tag="div" @swipeleft="onSwipeLeft(item)" @swiperight="onSwipeRight(item)" >
               <p class="num">{{item.title.substring(2)}}</p>
               <div class="avatar-wrap">
@@ -28,6 +28,8 @@
         </transition-group>
         <div ref="messageWrap" class="message-wrap">刷新成功</div>
         <div ref="messageIcon" class="message-icon"><i class="icon icon-rotate"></i></div>
+        <div ref="messageWrap2" class="message-wrap message2">没有更多啦</div>
+        <div ref="messageIcon2" class="message-icon message2"><i class="icon icon-rotate"></i></div>
       </div>
     </div>
   </div>
@@ -118,6 +120,11 @@
           transform: translateY(-100%);
           transition: all 0.4s;
           background: #ffffff;
+          &.message2 {
+            top: auto;
+            bottom: 0;
+            transform: translateY(100%);
+           }
         }
         .message-icon {
           position: absolute;
@@ -128,6 +135,13 @@
           z-index: 1;
           text-align: center;
           line-height: 40px;
+          transform: translate3d(0, -100%, 0);
+          transition: all 0.2s;
+          &.message2 {
+             top: auto;
+             bottom: 0;
+             transform: translate3d(0, 100%, 0);
+           }
           &>.icon {
             display: inline-block;
             vertical-align: top;
@@ -142,11 +156,24 @@
         .list {
           position: relative;
           z-index: 20;
-          padding-left: 15px;
-          padding-right: 15px;
+          margin-left: 15px;
+          margin-right: 15px;
+          min-height: 101%;
+          overflow: hidden;
           .item {
             position: relative;
-            display: block;
+            overflow: hidden;
+            &.flip-list-move {
+              transition: all 1s;
+            }
+            &.flip-list-leave-active {
+              transition: all 1s;
+              position: absolute;
+            }
+            &.flip-list-leave-to {
+              opacity: 0;
+              transform: translate3d(-100%, 0, 0);
+            }
             .cnt {
               position: relative;
               z-index: 10;
@@ -208,9 +235,9 @@
             }
             .delete {
               position: absolute;
-              top: 0;
-              right: 1px;
-              bottom: 0;
+              top: 1px;
+              right: 3px;
+              bottom: 1px;
               width: 70px;
               background: #cc3636;
               font-size: 18px;
@@ -224,10 +251,6 @@
       }
     }
   }
-.flip-list-leave-active {
-  transition: all 0.4s;
-  transform: translate3d(-100%, 0, 0);
-}
 </style>
 <script type="text/ecmascript-6">
 import Bscroll from 'better-scroll';
@@ -236,7 +259,9 @@ export default {
   data () {
     return {
       scroll: null,
-      list: []
+      list: [],
+      timer: null,
+      count: 2
     };
   },
   mounted () {
@@ -251,8 +276,7 @@ export default {
           title: `胡歌${i + 1}`,
           src: './static/image/item.png',
           time: (() => `${Math.ceil(Math.random() * 60)}:${Math.ceil(Math.random() * 60)}`)(),
-          delete: false,
-          show: true
+          delete: false
         });
       }
     },
@@ -264,6 +288,9 @@ export default {
         pullDownRefresh: {
           threshold: 50,
           stop: 40
+        },
+        pullUpLoad: {
+          threshold: -70
         }
       });
       this.scroll.on('pullingDown', () => {
@@ -273,10 +300,36 @@ export default {
           this.$refs.messageWrap.style.transform = 'translateY(-100%)';
           this.$refs.messageWrap.style.webkitTransform = 'translateY(-100%)';
           this.scroll.finishPullDown();
-        }, 3000);
+        }, 5000);
       });
       this.scroll.on('pullingUp', () => {
-        console.log('pullingUp');
+        this.$refs.messageWrap2.style.webkitTransform = 'translateY(0)';
+        this.$refs.messageWrap2.style.transform = 'translateY(0)';
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+          let newArr = [];
+          for (let i = 0; i < 10; i++) {
+            newArr.push({
+              title: `胡歌${i + this.count * 10 + 1}`,
+              src: './static/image/item.png',
+              time: (() => `${Math.ceil(Math.random() * 60)}:${Math.ceil(Math.random() * 60)}`)(),
+              delete: false
+            });
+          }
+          this.count++;
+          this.list = this.list.concat(newArr);
+          this.scroll.finishPullUp();
+          this.scroll.refresh();
+          this.$refs.messageWrap2.style.webkitTransform = 'translateY(100%)';
+          this.$refs.messageWrap2.style.transform = 'translateY(100%)';
+        }, 3000);
+      });
+      this.scroll.on('touchEnd', (pos) => {
+        let MAX_LEN = this.scroll.scrollerHeight - this.scroll.wrapperHeight;
+        if (pos.y < -MAX_LEN) {
+          this.$refs.messageWrap2.style.webkitTransform = 'translateY(0)';
+          this.$refs.messageWrap2.style.transform = 'translateY(0)';
+        }
       });
       this.scroll.on('scroll', (pos) => {
         let rotateWrap = this.$refs.messageIcon;
@@ -290,6 +343,18 @@ export default {
           rotateWrap.style.transform = 'translateY(-100%)';
           rotateWrap.style.webkitTransform = 'translateY(-100%)';
         }
+        let rotateWrap2 = this.$refs.messageIcon2;
+        let rotateIcon2 = rotateWrap2.querySelector('.icon-rotate');
+        let MAX_LEN = this.scroll.scrollerHeight - this.scroll.wrapperHeight;
+        if (pos.y < -MAX_LEN - 40) {
+          rotateWrap2.style.webkitTransform = `translateY(${Math.max(pos.y + MAX_LEN + 40, 0)}px)`;
+          rotateWrap2.style.transform = `translateY(${Math.max(pos.y + MAX_LEN + 40, 0)}px)`;
+          rotateIcon2.style.transform = `rotate(${pos.y * 10}deg)`;
+          rotateIcon2.style.webkitTransform = `rotate(${pos.y * 10}deg)`;
+        } else {
+          rotateWrap2.style.transform = 'translateY(40px)';
+          rotateWrap2.style.webkitTransform = 'translateY(40px)';
+        }
       });
     },
     onSwipeLeft (item) {
@@ -299,7 +364,7 @@ export default {
       item.delete = false;
     },
     deleteFn (index) {
-      this.list[index].show = false;
+      this.list.splice(index, 1);
     }
   },
   components: {
