@@ -1,6 +1,6 @@
 <template>
   <div class="consult-wrap">
-    咨询
+    咨询----12313
   </div>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass">
