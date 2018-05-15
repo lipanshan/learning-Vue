@@ -1,5 +1,5 @@
 <template>
-  <keep-alive>
+<keep-alive>
   <transition name="fade">
     <div class="course-wrap">
       <div class="type-wrap border-bottom-1px">
@@ -10,10 +10,10 @@
       </div>
       <div class="type-menu">
         <div class="type-item">
-          <p class="border-right-1px">全部分类<i class="icon icon-cheveron-down"></i></p>
+          <p @click="toggleTypes" class="border-right-1px">全部分类<i class="icon icon-cheveron-down"></i></p>
         </div>
         <div class="type-item">
-          <p>全部地区<i class="icon icon-cheveron-down"></i></p>
+          <p @click="toggloAddress" >全部地区<i class="icon icon-cheveron-down"></i></p>
         </div>
       </div>
       <v-scroll class="list-wrap">
@@ -21,6 +21,12 @@
           <consult-item :itemInfo="item"></consult-item>
         </li>
       </v-scroll>
+      <v-address v-if="vAddressFlag" class="select-wrap" @select="selectItem" ref="vAddressWrap"></v-address>
+      <v-types v-if="vTypeFlag"
+               :typeList="typesData.cntList"
+               @select="selectTypes"
+               @selectCnt="selectTypesCnt"
+               class="select-wrap" ref="vTypesWrap"></v-types>
     </div>
   </transition>
   </keep-alive>
@@ -44,7 +50,7 @@
     position: relative
     padding: 15px 20px
     background-color: $color-theme
-    z-index: 1
+    z-index: 40
     .search-wrap
       position: relative
       display: -webkit-box
@@ -76,6 +82,8 @@
         line-height: $font-size-small-l + 14px
         color: $color-text-l
   .type-menu
+    position: relative
+    z-index: 40
     display: -webkit-flex
     display: flex
     display: -webkit-box
@@ -114,15 +122,26 @@
     overflow: hidden
     &>li
       position: relative
+  .select-wrap
+    position: absolute
+    top: 100px
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 30
 
 </style>
 <script type="text/ecmascript-6">
 import vScroll from '@/components/scroll'
 import consultItem from '@/components/consultitem'
+import vAddress from '@/components/address'
+import vTypes from '@/components/types'
 export default {
   name: 'courseInfo',
   data () {
     return {
+      vTypeFlag: false,
+      vAddressFlag: false,
       courseList: [
         {
           id: 1,
@@ -224,12 +243,155 @@ export default {
           date: '9月28日 12:00-14:00',
           idAddress: true
         }
-      ]
+      ],
+      typesData: {
+        cntList: [
+          {
+            title: '公益沙龙',
+            list: [
+              '公益管理',
+              '公益内容',
+              '公益分类'
+            ]
+          },
+          {
+            title: '行业分析',
+            list: [
+              '公益管理',
+              '企业管理',
+              '综合应用',
+              '行业分析',
+              '实施方法',
+              '竞争对手'
+            ]
+          },
+          {
+            title: '商业培训',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '公益沙龙11',
+            list: [
+              '公益管理',
+              '公益内容',
+              '公益分类'
+            ]
+          },
+          {
+            title: '行业分析22',
+            list: [
+              '公益管理',
+              '企业管理',
+              '综合应用',
+              '行业分析',
+              '实施方法',
+              '竞争对手'
+            ]
+          },
+          {
+            title: '商业培训33',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '商业培训44',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '商业培训55',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '商业培训66',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '商业培训77',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '商业培训88',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          },
+          {
+            title: '商业培训99',
+            list: [
+              '公益管理',
+              '公共资源',
+              '综合应用',
+              '企业形象',
+              '实施方法'
+            ]
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    toggloAddress () {
+      this.vTypeFlag = false
+      this.vAddressFlag = !this.vAddressFlag
+    },
+    selectItem (data) {
+      console.log(data)
+    },
+    toggleTypes () {
+      this.vAddressFlag = false
+      this.vTypeFlag = !this.vTypeFlag
+    },
+    selectTypes (data) {
+      console.log(data)
+    },
+    selectTypesCnt (data) {
+      console.log(data)
     }
   },
   components: {
     vScroll,
-    consultItem
+    consultItem,
+    vAddress,
+    vTypes
   }
 }
 </script>

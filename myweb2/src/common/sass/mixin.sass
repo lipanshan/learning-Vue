@@ -69,6 +69,7 @@
   .border-1px
     z-index: 1
     &::after
+      margin: -1px
       content: ""
       position: absolute
       top: 0
@@ -76,7 +77,7 @@
       width: 200%
       height: 200%
       transform: scale(0.5)
-      transform-origin: left top
+      transform-origin: center center
       @include border-top-1px(solid, $border-color)
       @include border-right-1px(solid, $border-color)
       @include border-bottom-1px(solid, $border-color)
@@ -134,6 +135,7 @@
   .border-1px
     z-index: 1
     &::after
+      margin: -1px
       content: ""
       position: absolute
       top: 0
