@@ -28,6 +28,7 @@
                @selectCnt="selectTypesCnt"
                class="select-wrap" ref="vTypesWrap"></v-types>
     </div>
+
   </transition>
   </keep-alive>
 </template>

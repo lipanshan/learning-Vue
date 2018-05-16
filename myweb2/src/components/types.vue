@@ -4,7 +4,7 @@
     <div class="left">
       <scroll class="scroll-content-wrap" ref="scrollTitleWrap">
         <div v-for="(item, index) of typeList"
-             @click="selectTitle(item, index)"
+             @click.stop="selectTitle(item, index)"
              :class="{'active': selectCurrentIndex === index}"
              class="title-item border-1px title-item-hook" :key="item.title">
           <h2>{{item.title}}</h2>
@@ -96,7 +96,7 @@
       height: 100%
       overflow: hidden
       .list-item
-        margin-top: 19px
+        padding-top: 19px
         .head-title
           display: -webkit-box
           display: -webkit-flex
@@ -172,17 +172,20 @@ export default {
     },
     scroll (pos) {
       let list = this.$refs.scrolllistWrap.$el.querySelectorAll('.list-item-hook')
+      let maxLen = this.$refs.scrolllistWrap.scroll.scrollerHeight - this.$refs.scrolllistWrap.scroll.wrapperHeight
+      if (Math.abs(pos.y) >= maxLen) {
+        return false
+      }
       this.selectCurrentIndex = this._countFn(list)
     },
     _countFn (list) {
       let len = list.length - 1
-      for (let i = len; i > 0; i--) {
+      for (let i = 0; i < len; i++) {
         let rect = list[i].getBoundingClientRect()
-        if (rect.y <= 0) {
+        if (rect.y > 0) {
           return i
         }
       }
-      return 0
     }
   },
   components: {
