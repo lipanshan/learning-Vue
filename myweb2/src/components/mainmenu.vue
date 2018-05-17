@@ -1,19 +1,19 @@
 <template>
     <div class="menu-wrap">
       <ul class="list">
-        <li class="list-item" :class="{'active': currentIndex === 0}" @click="selectItem(0)">
+        <li class="list-item" :class="{'active': currentIndex === 'home'}" @click="selectItem('home')">
           <i class="icon icon-home"></i>
           <h2>首页</h2>
         </li>
-        <li class="list-item" :class="{'active': currentIndex === 1}" @click="selectItem(1)">
+        <li class="list-item" :class="{'active': currentIndex === 'course'}" @click="selectItem('course')">
           <i class="icon icon-books"></i>
           <h2>课程</h2>
         </li>
-        <li class="list-item" :class="{'active': currentIndex === 2}" @click="selectItem(2)">
+        <li class="list-item" :class="{'active': currentIndex === 'consult'}" @click="selectItem('consult')">
           <i class="icon icon-book"></i>
           <h2>咨询</h2>
         </li>
-        <li class="list-item" :class="{'active': currentIndex === 3}" @click="selectItem(3)">
+        <li class="list-item" :class="{'active': currentIndex === 'user'}" @click="selectItem('user')">
           <i class="icon icon-user"></i>
           <h2>我的</h2>
         </li>
@@ -57,10 +57,17 @@
 export default {
   data () {
     return {
-      currentIndex: 0
+      currentIndex: 'home'
     }
   },
+  mounted () {
+    this._initMenu()
+  },
   methods: {
+    _initMenu () {
+      let hash = window.location.hash.substring(2)
+      this.currentIndex = hash
+    },
     selectItem (index) {
       this.currentIndex = index
       this.$emit('select', index)

@@ -184,10 +184,14 @@ export default {
   },
   methods: {
     moreInfo () {
-      console.log('查看更多1')
+      this.$router.push({
+        path: '/consult'
+      })
     },
     moreCourseInfo () {
-      console.log('moreCourseInfo')
+      this.$router.push({
+        path: '/course'
+      })
     },
     _initCourseList () {
       let el = this.$refs.vscrollWrapper.$el.querySelector('.course-wrap-hook')

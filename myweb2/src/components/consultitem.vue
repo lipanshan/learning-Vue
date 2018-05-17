@@ -5,13 +5,17 @@
     </a>
     <div class="text-wrap">
       <h2>{{itemInfo.title}}</h2>
-      <div v-show="!itemInfo.idAddress" class="info-wrap">
-        <p class="see"><i class="icon icon-view-show"></i>{{itemInfo.count}}次浏览</p>
+      <div v-show="itemInfo.idAddress === false" class="info-wrap">
+        <p class="see"><i class="icon icon-view-show"></i>{{itemInfo.see}}次浏览</p>
         <p class="time"><i class="icon icon-time"></i>{{itemInfo.time}}</p>
       </div>
-      <div v-show="itemInfo.idAddress" class="info-wrap2">
+      <div v-show="itemInfo.idAddress === true" class="info-wrap2">
         <div class="data"><i class="icon icon-time"></i>{{itemInfo.date}}</div>
         <div class="address"><i class="icon icon-location2"></i>{{itemInfo.address}}</div>
+      </div>
+      <div v-show="itemInfo.idAddress === 'consult'" class="info-wrap2">
+        <div class="data"><i class="icon icon-time"></i>{{itemInfo.time}}</div>
+        <div class="address"><i class="icon icon-view-show"></i>{{itemInfo.see}}次浏览</div>
       </div>
     </div>
   </div>

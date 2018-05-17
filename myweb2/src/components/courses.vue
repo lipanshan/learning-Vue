@@ -18,7 +18,7 @@
       </div>
       <v-scroll class="list-wrap">
         <li v-for="item in courseList" :list="courseList" :key="item.id">
-          <consult-item :itemInfo="item"></consult-item>
+          <consult-item @selectItem="selectConsult" :itemInfo="item"></consult-item>
         </li>
       </v-scroll>
       <v-address v-if="vAddressFlag" class="select-wrap" @select="selectItem" ref="vAddressWrap"></v-address>
@@ -27,8 +27,8 @@
                @select="selectTypes"
                @selectCnt="selectTypesCnt"
                class="select-wrap" ref="vTypesWrap"></v-types>
+      <router-view @goBack="goBack" class="fixed-warp"></router-view>
     </div>
-
   </transition>
   </keep-alive>
 </template>
@@ -47,6 +47,13 @@
     transform: translate3d(100%, 0, 0)
   &.fade-leave-to
     transform: translate3d(-100%, 0, 0)
+  .fixed-warp
+    position: fixed
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 200
   .type-wrap
     position: relative
     padding: 15px 20px
@@ -386,6 +393,16 @@ export default {
     },
     selectTypesCnt (data) {
       console.log(data)
+    },
+    selectConsult (data) {
+      this.$router.push({
+        path: '/courseinfo'
+      })
+    },
+    goBack () {
+      this.$router.push({
+        path: '/course'
+      })
     }
   },
   components: {

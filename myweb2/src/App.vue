@@ -14,19 +14,12 @@ import vMenu from '@/components/mainmenu'
 export default {
   name: 'App',
   data () {
-    return {
-      menuList: [
-        'home',
-        'course',
-        'consult',
-        'user'
-      ]
-    }
+    return {}
   },
   methods: {
     selectFn (index) {
       this.$router.push({
-        path: `/${this.menuList[index]}`
+        path: `/${index}`
       })
     }
   },
@@ -58,6 +51,7 @@ body
     left: 0
     z-index: 10
     transition: all 0.4s
+    overflow: hidden
   .footer
     position: absolute
     right: 0
