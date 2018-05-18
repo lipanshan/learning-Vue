@@ -13,17 +13,22 @@
         </div>
       </div>
       <ul class="user-list">
-        <li v-for="item of consultList" class="user-item">
+        <li v-for="item of consultList" :key="item.id" class="user-item">
           <consult-item :itemInfo="item"></consult-item>
           <div class="button-group">
-            <div @click="selectButton('基本信息', item)" class="button active border-1px">基本信息</div>
-            <div @click="selectButton('评价/作业', item)" class="button border-1px">评价/作业</div>
-            <div @click="selectButton('证书', item)" class="button border-1px">证书</div>
+            <router-link :to="{path: 'registerinfo'}" @click="selectButton('基本信息', item)" class="button active border-1px" append>基本信息</router-link>
+            <router-link :to="{ path: 'commentinfo' }" class="button border-1px" append>评价/作业</router-link>
+            <router-link :to="{path: 'certificateinfo'}" class="button border-1px" append>证书</router-link>
           </div>
           <div class="line"></div>
         </li>
       </ul>
     </v-scroll>
+    <transition name="fade">
+      <keep-alive>
+        <router-view class="user-router"></router-view>
+      </keep-alive>
+    </transition>
   </div>
   </transition>
 </template>
@@ -38,11 +43,24 @@
   z-index: 20
   background-color: $color-theme
   transition: all 0.4s
-  overflow: hidden
   &.move-enter
     transform: translate3d(100%, 0, 0)
   &.move-leave-to
     transform: translate3d(-100%, 0, 0)
+  .user-router
+    position: fixed
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 100
+    background-color: $color-theme-bg
+    transition: all 0.4s
+    overflow: hidden
+    &.fade-enter
+      transform: translate3d(100%, 0, 0)
+    &.fade-leave-to
+      transform: translate3d(-100%, 0, 0)
   &>.scroll-wrap
     height: 100%
     overflow: hidden
@@ -99,11 +117,15 @@
       .button-group
         padding: 8px 0
         height: 23px
+        font-size: 0
+        white-space: nowrap
+        text-align: right
         .button
           position: relative
           margin-right: 11px
           margin-left: 11px
-          float: right
+          display: inline-block
+          vertical-align: top
           width: 79px
           height: 23px
           font-size: $font-size-small
@@ -119,9 +141,6 @@
             background-color: $color-text-red
             &:after
               border: none
-
-
-
 </style>
 <script type="text/ecmascript-6">
 import vScroll from '@/components/scroll'
@@ -200,7 +219,13 @@ export default {
   },
   methods: {
     selectButton (txt, data) {
-      console.log(txt, data)
+      if (txt === '基本信息') {
+
+      } else if (txt === '评论作业') {
+
+      } else if (txt === '证书') {
+
+      }
     },
     goBack () {
       console.log('个人信息')

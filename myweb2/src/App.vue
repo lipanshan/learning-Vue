@@ -51,7 +51,6 @@ body
     left: 0
     z-index: 10
     transition: all 0.4s
-    overflow: hidden
   .footer
     position: absolute
     right: 0

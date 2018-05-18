@@ -156,7 +156,7 @@ export default {
   methods: {
     selectItem (data) {
       this.$router.push({
-        path: '/consultDeatil'
+        path: '/consult/consultDeatil'
       })
     }
   },

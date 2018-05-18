@@ -4,7 +4,7 @@
       <img :src="itemInfo.url" alt="图片">
     </a>
     <div class="text-wrap">
-      <h2>{{itemInfo.title}}</h2>
+      <h2>{{itemInfo.title.substring(0, 24)}}</h2>
       <div v-show="itemInfo.idAddress === false" class="info-wrap">
         <p class="see"><i class="icon icon-view-show"></i>{{itemInfo.see}}次浏览</p>
         <p class="time"><i class="icon icon-time"></i>{{itemInfo.time}}</p>
@@ -62,7 +62,6 @@
       font-size: $font-size-small-l
       line-height: $font-size-small-l + 9px
       color: $color-text-l
-      overflow: hidden
     .info-wrap
       position: absolute
       right: 0

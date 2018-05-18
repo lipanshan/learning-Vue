@@ -6,6 +6,9 @@ import userPage from '@/components/user'
 import consultPage from '@/components/consult'
 import courseInfo from '@/components/courseinfo'
 import consultDeatil from '@/components/consultdeatil'
+import regiserInfo from '@/components/registerinfo'
+import certificateInfo from '@/components/certificate'
+import commentInfo from '@/components/comment'
 
 Vue.use(Router)
 
@@ -22,7 +25,7 @@ export default new Router({
       component: coursePage,
       children: [
         {
-          path: '/courseinfo',
+          path: 'courseinfo',
           name: 'courseInfo',
           component: courseInfo
         }
@@ -34,7 +37,7 @@ export default new Router({
       component: consultPage,
       children: [
         {
-          path: '/consultDeatil',
+          path: 'consultDeatil',
           name: 'consultDeatil',
           component: consultDeatil
         }
@@ -43,7 +46,21 @@ export default new Router({
     {
       path: '/user',
       name: 'userCenter',
-      component: userPage
+      component: userPage,
+      children: [
+        {
+          path: 'registerinfo',
+          component: regiserInfo
+        },
+        {
+          path: 'certificateinfo',
+          component: certificateInfo
+        },
+        {
+          path: 'commentinfo',
+          component: commentInfo
+        }
+      ]
     },
     {
       path: '/',

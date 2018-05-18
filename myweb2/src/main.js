@@ -4,11 +4,13 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import fastClick from 'fastclick'
+import cube from 'cube-ui'
 
 import './common/sass/reset.css'
 import './common/sass/style.css'
 
 fastClick.attach(document.body)
+Vue.use(cube)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

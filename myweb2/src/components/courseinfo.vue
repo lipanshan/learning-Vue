@@ -4,7 +4,6 @@
     <v-scroll :list="info">
       <div class="avatar-wrap">
         <img :src="info.url" alt="图片">
-        <div class="back" @click="back"><i class="icon icon-cheveron-left"></i></div>
       </div>
       <h1 class="title">{{info.question}}</h1>
       <div class="time-wrap">
@@ -109,18 +108,6 @@
       z-index: 10
       width: 100%
       height: 100%
-    .back
-      position: absolute
-      top: 10px
-      left: 0
-      width: 40px
-      height: 40px
-      text-align: center
-      z-index: 100
-      &>.icon
-        font-size: $font-size-very-large-x
-        line-height: $font-size-very-large-x
-        color: $color-theme
   .title
     padding: 10px 18px 0
     font-size: $font-size-small-l

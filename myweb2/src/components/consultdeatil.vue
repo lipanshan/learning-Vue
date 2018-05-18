@@ -12,7 +12,6 @@
         </div>
       </div>
     </v-scroll>
-    <div class="back" @click="back"><i class="icon icon-cheveron-left"></i></div>
   </div>
   </transition>
 </template>
@@ -29,19 +28,6 @@
   background-color: $color-theme
   &.move-enter, &.move-leave-to
     transform: translate3d(100%, 0, 0)
-  .back
-    position: absolute
-    top: 10px
-    left: 0
-    width: 40px
-    height: 40px
-    text-align: center
-    z-index: 100
-    &>.icon
-      font-size: $font-size-very-large-x
-      line-height: $font-size-very-large-x
-      color: $color-text-d
-
   .consult-deatil
     padding-left: 15px
     padding-right: 15px
@@ -112,9 +98,6 @@ export default {
     return {}
   },
   methods: {
-    back () {
-      this.$router.go(-1)
-    }
   },
   components: {
     vScroll

@@ -1,11 +1,13 @@
 <template>
-<keep-alive>
-  <transition name="fade">
+<transition name="fade">
+  <keep-alive>
     <div class="course-wrap">
       <div class="type-wrap border-bottom-1px">
         <div class="search-wrap border-1px">
-          <i class="icon icon-search"></i>
-          <input placeholder="热门搜索：吴弘志 公益组织管理" type="text" class="search">
+          <div class="search-box">
+            <i class="icon icon-search"></i>
+            <input placeholder="热门搜索：吴弘志 公益组织管理" type="text" class="search">
+          </div>
         </div>
       </div>
       <div class="type-menu">
@@ -27,10 +29,10 @@
                @select="selectTypes"
                @selectCnt="selectTypesCnt"
                class="select-wrap" ref="vTypesWrap"></v-types>
-      <router-view @goBack="goBack" class="fixed-warp"></router-view>
+      <router-view class="fixed-warp"></router-view>
     </div>
-  </transition>
   </keep-alive>
+</transition>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass">
 @import '../common/sass/mixin'
@@ -41,7 +43,6 @@
   bottom: 0
   z-index: 10
   width: 100%
-  overflow: hidden
   transition: all 0.4s
   &.fade-enter
     transform: translate3d(100%, 0, 0)
@@ -61,34 +62,39 @@
     z-index: 40
     .search-wrap
       position: relative
-      display: -webkit-box
-      display: -moz-box
-      display: -ms-flexbox
-      display: -webkit-flex
-      display: flex
-      z-index: 1
+      padding-right: 2px
       &::after
         border-radius: 8px
-      &>.icon
-        margin-left: 16px
-        margin-right: 14px
-        font-size: $font-size-medium-m
-        line-height: $font-size-medium-m + 14px
-        color: $color-text
-        font-weight: 600
-      .search
-        padding-bottom: 1px
-        -webkit-box-flex: 1
-        -moz-box-flex: 1
-        -ms-flex: 1
-        -webkit-flex: 1
-        flex: 1
-        border: none
-        outline: none
-        background: $color-theme
-        font-size: $font-size-small-l
-        line-height: $font-size-small-l + 14px
-        color: $color-text-l
+      .search-box
+        display: -webkit-box
+        display: -moz-box
+        display: -ms-flexbox
+        display: -webkit-flex
+        display: flex
+        z-index: 1
+        &>.icon
+          margin-left: 16px
+          margin-right: 14px
+          font-size: $font-size-medium-m
+          line-height: $font-size-medium-m + 14px
+          color: $color-text
+          font-weight: 600
+        .search
+          position: relative
+          z-index: 2
+          padding-bottom: 1px
+          -webkit-box-flex: 1
+          -moz-box-flex: 1
+          -ms-flex: 1
+          -webkit-flex: 1
+          flex: 1
+          height: 30px
+          border: none
+          outline: none
+          background: $color-theme
+          font-size: $font-size-small-l
+          line-height: $font-size-small-l + 14px
+          color: $color-text-l
   .type-menu
     position: relative
     z-index: 40
@@ -396,12 +402,7 @@ export default {
     },
     selectConsult (data) {
       this.$router.push({
-        path: '/courseinfo'
-      })
-    },
-    goBack () {
-      this.$router.push({
-        path: '/course'
+        path: '/course/courseinfo'
       })
     }
   },

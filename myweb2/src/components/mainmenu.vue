@@ -1,22 +1,22 @@
 <template>
     <div class="menu-wrap">
       <ul class="list">
-        <li class="list-item" :class="{'active': currentIndex === 'home'}" @click="selectItem('home')">
+        <router-link tag="li" to="/home" class="list-item">
           <i class="icon icon-home"></i>
           <h2>首页</h2>
-        </li>
-        <li class="list-item" :class="{'active': currentIndex === 'course'}" @click="selectItem('course')">
+        </router-link>
+        <router-link tag="li" to="/course" class="list-item" >
           <i class="icon icon-books"></i>
           <h2>课程</h2>
-        </li>
-        <li class="list-item" :class="{'active': currentIndex === 'consult'}" @click="selectItem('consult')">
+        </router-link>
+        <router-link tag="li" to="/consult" class="list-item">
           <i class="icon icon-book"></i>
           <h2>咨询</h2>
-        </li>
-        <li class="list-item" :class="{'active': currentIndex === 'user'}" @click="selectItem('user')">
+        </router-link>
+        <router-link tag="li" to="/user" class="list-item">
           <i class="icon icon-user"></i>
           <h2>我的</h2>
-        </li>
+        </router-link>
       </ul>
     </div>
 </template>
@@ -40,7 +40,7 @@
         -webkit-flex: 1
         flex: 1
         color: $color-text
-        &:hover,&.active
+        &.router-link-active,&.router-link-active
           color: $color-text-red
         &>.icon
           margin: 12px auto 0
@@ -57,21 +57,9 @@
 export default {
   data () {
     return {
-      currentIndex: 'home'
     }
-  },
-  mounted () {
-    this._initMenu()
   },
   methods: {
-    _initMenu () {
-      let hash = window.location.hash.substring(2)
-      this.currentIndex = hash
-    },
-    selectItem (index) {
-      this.currentIndex = index
-      this.$emit('select', index)
-    }
   }
 }
 </script>
