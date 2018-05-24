@@ -5,8 +5,8 @@
       <div class="avatar-wrap">
         <div class="avatar-box">
           <img :src="userInfo.url" alt="头像">
+          <h1>{{userInfo.name}}</h1>
         </div>
-        <h1>{{userInfo.name}}</h1>
         <div @click="goBack" class="back">
           <p class="back-txt">个人信息</p>
           <i class="icon icon-cheveron-right"></i>
@@ -71,20 +71,20 @@
     height: 0
     overflow: hidden
     .avatar-box
-      margin: 69px auto 0
-      width: 95px
-      height: 95px
-      border-radius: 50%
-      border: 5px solid $color-theme
+      position: absolute
+      top: 50%
+      left: 50%
+      transform: translate3d(-50%, -50%, 0)
       &>img
         width: 95px
         height: 95px
         border-radius: 50%
-    &>h1
-      font-size: $font-size-medium-m
-      line-height: $font-size-medium-m + 20px
-      color: $color-theme
-      text-align: center
+        border: 5px solid $color-theme
+      &>h1
+        font-size: $font-size-medium-m
+        line-height: $font-size-medium-m + 20px
+        color: $color-theme
+        text-align: center
     .back
       position: absolute
       left: 0

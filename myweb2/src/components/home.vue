@@ -42,7 +42,12 @@
    transform: translate3d(-100%, 0, 0)
   .header
     position: relative
-    height: 200px
+    padding-bottom: 60%
+    height: 0
+    &>.slider-container
+      position: absolute
+      top: 0
+      left: 0
     .slider-pagination.slider-pagination-bullets
       height: 8px
       .slider-pagination-bullet
