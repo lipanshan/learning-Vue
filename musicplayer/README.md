@@ -53,6 +53,6 @@ localStorage(HTML5):本地存储，保存用户喜欢的歌曲
 2.第一次使用promise 
 3.mock接口数据
 4.transition-group/transition 使用
-5.animate-stat-pause 在移动端不起作用，采用状态叠加解决啦（引用一下别人的demo: https://codepen.io/HaoyCn/pen/BZZrLd）
+5.animate-state-pause 在移动端不起作用，采用状态叠加解决啦（引用一下别人的demo: https://codepen.io/HaoyCn/pen/BZZrLd）
 6.audio 在ios下不能自动播放，给document添加touchstart事件解决
 7.获取某网站歌曲地址需要验证referer,使用axios可以修改请求头来解决，这一块不太明白原理
