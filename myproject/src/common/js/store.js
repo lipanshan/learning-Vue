@@ -1,6 +1,6 @@
 export function setLocalstorage (id, key, val) {
   let seller = window.localStorage.getItem('_seller_');
-  if (!seller) {
+  if (seller) {
     if (!seller[id]) {
       seller[id] = {};
     }
