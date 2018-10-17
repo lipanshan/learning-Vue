@@ -1,22 +1,35 @@
 <template>
+  <transition name="move">
   <div class="address-wrap">
+    <scroll class="address-wrap-scroll" :list="cityData">
+      <div class="content">
+        <div class="title-wrap">
+          <h1 class="address-title border-bottom-1px">{{cityData[0].title}}</h1>
+        </div>
+        <ul class="city-list-wrap">
+          <li v-for="item in cityData[0].city" :class="{'active': currentCity.id === item.id}" @click="selectItem(item)"  class="item" :key="item.id">{{item.name}}</li>
+        </ul>
+        <div class="title-wrap">
+          <h1 class="address-title border-bottom-1px">{{cityData[1].title}}</h1>
+        </div>
+        <ul class="city-list-wrap">
+          <li v-for="item in cityData[1].city" :class="{'active': currentCity.id === item.id}"  @click="selectItem(item)" class="item" :key="item.id">{{item.name}}</li>
+        </ul>
+      </div>
+    </scroll>
     <div class="mask"></div>
-    <h1 class="address-title border-bottom-1px">{{cityData[0].title}}</h1>
-    <ul class="city-list">
-      <li v-for="item in cityData[0].city" class="item" :key="item.id">{{item.name}}</li>
-    </ul>
-    <h1 class="address-title">{{cityData[1].title}}</h1>
-    <ul class="city-list">
-      <li v-for="item in cityData[1].city" class="item" :key="item.id">{{item.name}}</li>
-    </ul>
   </div>
+  </transition>
 </template>
 <style lang="sass" type="text/css" rel="stylesheet/sass">
-@import '../commom/sass/mixin'
+@import "../common/sass/mixin.sass"
 .address-wrap
   position: relative
+  overflow: hidden
   z-index: 1
-  background-color: $color-theme
+  transition: all 0.4s
+  &.move-enter, &.move-leave-to
+    transform: translate3d(0, -100%, 0)
   .mask
     position: absolute
     top: 0
@@ -27,17 +40,48 @@
     background: $color-text-l
     opacity: 0.8
     filter: alpha(opacity=80)
-  .address-title
-    position: relative
-    padding: 9px 32px 0
-    font-size: $font-size-small-l
-    line-heiht: $font-size-small-l + 15px
-    color: $color-text-l
-    text-indent: 2px
-  .city-list
-    padding-top: 5px
+  .address-wrap-scroll
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    overflow: hidden
+    z-index: 1
+    .content
+      background-color: $color-theme
+      .title-wrap
+        padding-bottom: 5px
+        .address-title
+          margin-left: 33px
+          margin-right: 33px
+          padding-left: 2px
+          padding-top: 9px
+          position: relative
+          font-size: $font-size-small-l
+          line-height: $font-size-small-l + 30px
+          color: $color-text-l
+          background-color: $color-theme
+      .city-list-wrap
+        padding-left: 18px
+        padding-right: 18px
+        background-color: $color-theme
+        overflow: hidden
+        .item
+          margin: 8px 6px
+          float: left
+          padding: 0 9px
+          font-size: $font-size-small-l
+          line-height: $font-size-small-l + 12px
+          color: $color-text-l
+          border-radius: 25px
+          &.active,&:hover
+            color: $color-text-red
+            background-color: $color-item-bg
+
 </style>
 <script type="text/ecmascript-6">
+import scroll from '@/components/scroll'
 export default {
   props: {
     select: {
@@ -144,8 +188,16 @@ export default {
           ]
         }
       ]
-
     }
+  },
+  methods: {
+    selectItem (item) {
+      this.currentCity = Object.assign({}, item)
+      this.$emit('select', item)
+    }
+  },
+  components: {
+    scroll
   }
 }
 </script>

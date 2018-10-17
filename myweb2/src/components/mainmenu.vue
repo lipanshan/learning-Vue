@@ -1,22 +1,22 @@
 <template>
     <div class="menu-wrap">
       <ul class="list">
-        <li class="list-item" :class="{'active': currentIndex === 0}" @click="selectItem(0)">
+        <router-link tag="li" to="/home" class="list-item">
           <i class="icon icon-home"></i>
           <h2>首页</h2>
-        </li>
-        <li class="list-item" :class="{'active': currentIndex === 1}" @click="selectItem(1)">
+        </router-link>
+        <router-link tag="li" to="/course" class="list-item" >
           <i class="icon icon-books"></i>
           <h2>课程</h2>
-        </li>
-        <li class="list-item" :class="{'active': currentIndex === 2}" @click="selectItem(2)">
+        </router-link>
+        <router-link tag="li" to="/consult" class="list-item">
           <i class="icon icon-book"></i>
           <h2>咨询</h2>
-        </li>
-        <li class="list-item" :class="{'active': currentIndex === 3}" @click="selectItem(3)">
+        </router-link>
+        <router-link tag="li" to="/user" class="list-item">
           <i class="icon icon-user"></i>
           <h2>我的</h2>
-        </li>
+        </router-link>
       </ul>
     </div>
 </template>
@@ -40,7 +40,7 @@
         -webkit-flex: 1
         flex: 1
         color: $color-text
-        &:hover,&.active
+        &.router-link-active,&.router-link-active
           color: $color-text-red
         &>.icon
           margin: 12px auto 0
@@ -57,14 +57,9 @@
 export default {
   data () {
     return {
-      currentIndex: 0
     }
   },
   methods: {
-    selectItem (index) {
-      this.currentIndex = index
-      this.$emit('select', index)
-    }
   }
 }
 </script>

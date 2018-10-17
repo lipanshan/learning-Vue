@@ -51,11 +51,15 @@ export default {
     },
     refresh () {
       this.scroll && this.scroll.refresh()
+    },
+    scrollToElem (elem, time) {
+      this.scroll && this.scroll.scrollToElement(elem, time)
     }
   },
   watch: {
-    'list' () {
-      if (this.scroll !== null) {
+    list (n, o) {
+      console.log(n)
+      if (this.scroll) {
         this.refresh()
       }
     }

@@ -42,7 +42,12 @@
    transform: translate3d(-100%, 0, 0)
   .header
     position: relative
-    height: 200px
+    padding-bottom: 60%
+    height: 0
+    &>.slider-container
+      position: absolute
+      top: 0
+      left: 0
     .slider-pagination.slider-pagination-bullets
       height: 8px
       .slider-pagination-bullet
@@ -184,10 +189,14 @@ export default {
   },
   methods: {
     moreInfo () {
-      console.log('查看更多1')
+      this.$router.push({
+        path: '/consult'
+      })
     },
     moreCourseInfo () {
-      console.log('moreCourseInfo')
+      this.$router.push({
+        path: '/course'
+      })
     },
     _initCourseList () {
       let el = this.$refs.vscrollWrapper.$el.querySelector('.course-wrap-hook')
