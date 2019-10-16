@@ -33,6 +33,19 @@ export default {
     mode: {
       type: String,
       default: 'native'
+    },
+    keepAlive: {
+      type: Boolean,
+      default: false
+    },
+    bar: {
+      type: Object,
+      default () {
+        return {
+          background: '#ccc',
+          keepShow: true
+        }
+      }
     }
   },
   data () {
@@ -40,16 +53,13 @@ export default {
       scroll: null,
       ops: {
         mode: this.mode,
-        keepalive: false,
-        bar: {
-          background: '#ccc',
-          keepShow: true
-        },
+        keepAlive: this.keepAlive,
+        bar: this.bar,
         scrollButton: {
           enable: false
         },
         scrollPanel: {
-          easing: 'easeInQuad',
+          easing: 'linear',
           speed: 200
         }
       }

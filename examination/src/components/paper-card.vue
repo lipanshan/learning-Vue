@@ -2,16 +2,16 @@
   <div class="question-card">
     <scroll :listData="list" >
       <h1>{{title}}</h1>
-      <div class="timeout-wrap">
+      <div class="timeout-wrap" :class="{'status-danger': danger1, 'status-error': danger2}">
         <span class="time-icon"><span></span></span>
         <span class="time-txt">{{timeout}}</span>
       </div>
       <p class="subtitle">答题进度</p>
       <div class="progress-wrap">
         <div class="progress">
-          <div class="progress-bar"></div>
+          <div class="progress-bar" :style="`width: ${progressNum}`"></div>
         </div>
-        <div class="progress-num"><span class="current">2</span>/<span class="all">2</span></div>
+        <div class="progress-num"><span class="current">{{answerQuesNum}}</span>/<span class="all">{{list.length}}</span></div>
       </div>
       <div class="line"></div>
       <div class="card-title">
@@ -48,6 +48,14 @@ export default {
     testTime: {
       type: [String, Number],
       default: 0
+    },
+    dangerTime1: {
+      type: [String, Number],
+      default: 30 * 60 * Math.pow(10, 3)
+    },
+    dangerTime2: {
+      type: [String, Number],
+      default: 15 * 60 * Math.pow(10, 3)
     }
   },
   data () {
@@ -57,14 +65,35 @@ export default {
     }
   },
   computed: {
-    currentIndex () {
-      return this.index
-    },
     timeout () {
       let h = this.padZero(parseInt(this.currentTime / (Math.pow(60, 2) * Math.pow(10, 3))))
       let s = this.padZero(parseInt((this.currentTime % (Math.pow(60, 2) * Math.pow(10, 3))) / (Math.pow(60, 1) * Math.pow(10, 3))))
       let m = this.padZero(parseInt((this.currentTime % (Math.pow(60, 1) * Math.pow(10, 3))) / Math.pow(10, 3)))
       return h + ':' + s + ':' + m
+    },
+    answerQuesNum () {
+      let num = 0
+      this.list.forEach((item) => {
+        if (item.active && item.active.length) {
+          num++
+        }
+      })
+      return num
+    },
+    progressNum () {
+      let num = 0
+      this.list.forEach((item) => {
+        if (item.active && item.active.length) {
+          num++
+        }
+      })
+      return parseInt(num / this.list.length * Math.pow(10, 2)) + '%'
+    },
+    danger1 () {
+      return this.currentTime <= this.dangerTime1
+    },
+    danger2 () {
+      return this.currentTime <= this.dangerTime2
     }
   },
   created () {
@@ -188,9 +217,9 @@ export default {
       overflow: hidden
       .progress-bar
         position: absolute
-        top: -100%
+        top: 0
         left: 0
-        width: 100%
+        width: 0
         height: 6px
         background-color: $bg-progress-bar
     .progress-num

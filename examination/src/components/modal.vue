@@ -118,15 +118,19 @@ export default {
   position: absolute
   top: 50%
   left: 50%
-  transform: translate3d(-50%, -50%, 0)
+  /*transform: translate3d(-50%, -50%, 0)*/
+  margin-left: -216px
+  margin-top: -116px
   z-index: 1050
   display: flex
   flex-direction: column
   border: 1px solid $border-modal
   border-radius: 6px
   overflow: hidden
-  box-shadow: 0 0 3px #dfdfdf
+  box-shadow: 0 0 4px #dfdfdf
   background-color: $color-n
+  min-width: 432px
+  height: 232px
   .modal-head
     padding: 6px 10px
     display: flex

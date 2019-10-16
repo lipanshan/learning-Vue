@@ -73,8 +73,8 @@ import scroll from '@/components/scroll'
 import modal from '@/components/modal'
 const MULIT_LIMIT_NUM = 2
 const PAPER_LIMIT_TIME = Math.pow(10, 3) * 60 * 15
-const STAR_TIME = 1544088540372
-const END_TIME = 1544092140372
+const STAR_TIME = 1544146163407
+const END_TIME = 1544147123407
 export default {
   name: 'longPaper',
   data () {
@@ -378,10 +378,8 @@ export default {
       for (let i = 0; i < this.list.length; i++) {
         if (this.list[i].id === data.id) {
           index = i
-          this.list[i] = Object.assign({}, this.list[i], {'current': data.id})
-        } else {
-          this.list[i] = Object.assign({}, this.list[i], {'current': data.id})
         }
+        this.$set(this.list, i, Object.assign({}, this.list[i], {'current': data.id}))
       }
       this.scrollFlag = false
       this.$refs.longPaperWrap.scrollToPos(`item${index}`)
@@ -397,6 +395,9 @@ export default {
       })
       for (let i = 0; i < list.length; i++) {
         if (list[i] <= data.scrollTop) {
+          this.list.forEach((item, index) => {
+            this.$set(this.list, index, Object.assign({}, item, {'current': this.list[list.length - 1 - i].id}))
+          })
           this.$refs.longPaperWrap.scrollTo({
             x: 0,
             y: list[i]
@@ -416,6 +417,9 @@ export default {
       })
       for (let i = 0; i < list.length; i++) {
         if (list[i] >= data.scrollTop) {
+          this.list.forEach((item, index) => {
+            this.$set(this.list, index, Object.assign({}, item, {'current': this.list[i].id}))
+          })
           this.$refs.longPaperWrap.scrollTo({
             x: 0,
             y: list[i]

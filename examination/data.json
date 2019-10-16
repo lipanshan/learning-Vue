@@ -1,0 +1,415 @@
+[
+  {
+    "id": "0",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 0
+  },
+  {
+    "id": "1",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 0,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1
+  },
+  {
+    "id": "2",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "自主",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1
+  },
+  {
+    "id": "5",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 0
+  },
+  {
+    "id": "6",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 0
+  },
+  {
+    "id": "7",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 0,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "未考试",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 0
+  },
+  {
+    "id": "9",
+    "category": "untest",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 0
+  },
+  {
+    "id": "10",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": 80,
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": "待阅卷",
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "category": "tested",
+    "poster": "/static/images/test-item.png",
+    "name": "瑞星网络安全基础课程水平考试瑞星网络安全基础课程水平考试考试",
+    "paperScore": "100分",
+    "testTime": "45分钟",
+    "qualifield": "60分",
+    "rule": "未交卷允许修改答案",
+    "cutoffTime": "2018-09-20（未按时交卷按0分交卷）",
+    "cutoffType": 1,
+    "shadowTitle": "开始考试前请仔细阅读试卷的相关事项",
+    "paperHref": "/pageList",
+    "paperType": 1,
+    "score": "待阅卷",
+    "useTime": "25分钟",
+    "submitFormType": "系统",
+    "buttons": [
+      {
+        "title": "正确",
+        "url": ""
+      },
+      {
+        "title": "错误",
+        "url": ""
+      }
+    ]
+  }
+]

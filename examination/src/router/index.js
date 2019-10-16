@@ -6,11 +6,12 @@ const paperList = r => require.ensure([], () => r(require('@/components/paper-li
 const forgetPassword = r => require.ensure([], () => r(require('@/components/forget-password.vue')), 'chunkname1')
 const longPaper = r => require.ensure([], () => r(require('@/components/long-paper.vue')), 'chunkname3')
 const shortPaper = r => require.ensure([], () => r(require('@/components/short-paper.vue')), 'chunkname4')
+const admin = r => require.ensure([], () => r(require('@/components/admin.vue')), 'chunkname5')
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/login',
@@ -53,6 +54,16 @@ export default new Router({
           path: 'shortPaper/:id',
           name: 'shortPaper',
           component: shortPaper
+        }
+      ]
+    },
+    {
+      path: '/admin',
+      component: admin,
+      children: [
+        {
+          path: '',
+          name: 'admin'
         }
       ]
     },

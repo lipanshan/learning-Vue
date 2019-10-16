@@ -90,7 +90,7 @@
             transform: translateY(-50%)
 </style>
 <script type="text/ecmascript-6">
-  import {recommend, hotRecommend} from 'api/recommend'
+  import {recommend, hotRecommend, testApi} from 'api/recommend'
   import slider from 'base/slider'
   import scroll from 'base/scroll'
   import loading from 'base/loading'
@@ -109,8 +109,12 @@
     mounted () {
       this._getRecommondData()
       this._getHotRecommend()
+      this._testApi()
     },
     methods: {
+      _testApi () {
+        testApi()
+      },
       handlePlayingList (playList) {
         if (this.$refs.scrollwrap) {
           let bottom = playList.length ? '60px' : ''
