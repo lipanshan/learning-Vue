@@ -1,0 +1,524 @@
+body, html {
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  width: 100%;
+}
+
+ul {
+  margin: 0;
+}
+
+input::-webkit-input-placeholder {
+  color: #999 !important;
+}
+
+input::-moz-placeholder {
+  color: #999 !important;
+}
+
+input:-moz-placeholder {
+  color: #999 !important;
+}
+
+input:-ms-input-placeholder {
+  color: #999 !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.firmname {
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.color-wraning {
+  color: #ff0000;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.form-wrap .dis-readonly {
+  border: 1px solid #ddd;
+  padding: 6px;
+}
+
+.btn-wrap {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title-warp {
+  border-bottom: 1px solid #e5e7ec;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.title-warp .title-text {
+  display: inline-block;
+  font-size: 16px;
+  margin: 0;
+  line-height: 30px;
+  color: #333;
+}
+
+.contentlist {
+  padding: 0 20px;
+}
+
+body .viewcer {
+  max-width: 800px;
+  margin-left: 100px;
+}
+
+body .viewcer .el-table {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+body .certificate .el-table th > .cell {
+  line-height: 40px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+body .certificate .el-table .caret-wrapper {
+  height: 40px;
+}
+
+body .certificate .el-table .caret-wrapper .sort-caret {
+  border-width: 6px;
+}
+
+body .el-form-item__label {
+  color: #333;
+}
+
+body .contentlist .buttons {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+body .contentlist .buttons a, body .contentlist .buttons span {
+  color: #4382e9;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body .formoverall .contentlist {
+  width: 700px;
+  padding-top: 20px;
+}
+
+body .formoverall .contentlist .dashedleft {
+  position: relative;
+}
+
+body .formoverall .contentlist .dashedleft::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 70%;
+  width: 50%;
+  height: 13px;
+  border: 1px dashed #999999;
+  border-bottom: none;
+  border-right: none;
+}
+
+body .formoverall .contentlist .dashedtop {
+  position: relative;
+}
+
+body .formoverall .contentlist .dashedtop::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 20%;
+  width: 120%;
+  height: 13px;
+  border: 1px dashed #999999;
+  border-bottom: none;
+  border-top: none;
+}
+
+body .formoverall .contentlist .dashedright {
+  position: relative;
+}
+
+body .formoverall .contentlist .dashedright::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 56%;
+  width: 10%;
+  height: 13px;
+  border: 1px dashed #999999;
+  border-bottom: none;
+  border-left: none;
+}
+
+body .formoverall .contentlist.labelicon .el-form-item__label::before {
+  content: '*';
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff0000;
+}
+
+body .formoverall .contentlist .el-form-item .el-col {
+  line-height: 30px;
+}
+
+body .formoverall .contentlist .el-form-item .el-col .el-select {
+  width: 100%;
+}
+
+body .formoverall .contentlist .el-form-item .el-form-item__content {
+  line-height: 30px;
+}
+
+body .formoverall .contentlist .el-form-item .el-form-item__label {
+  line-height: 30px;
+}
+
+body .formoverall .contentlist .el-form-item .el-form-item__error {
+  color: #ff0000;
+  position: relative;
+  top: 0;
+  left: 5px;
+  float: left;
+  line-height: 30px;
+  height: 30px;
+  vertical-align: middle;
+  padding-top: 0;
+}
+
+body .formoverall .contentlist .el-form-item .el-form-item__error::before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 15px;
+  height: 15px;
+  background: url("../images/fail_min_icon.png") no-repeat center center;
+}
+
+body .formoverall .contentlist .imgblock {
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 190px;
+  height: 130px;
+}
+
+body .formoverall .contentlist .imgblock img {
+  width: 100%;
+  height: 100%;
+}
+
+body .formoverall .contentlist .subblock {
+  padding-left: 100px;
+}
+
+body .formoverall .contentlist .subblock .mess {
+  font-size: 12px;
+  margin: 0 5px;
+}
+
+body .formoverall .contentlist .subblock .mess > i {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 3px;
+  vertical-align: middle;
+}
+
+body .formoverall .contentlist .subblock .is-disabled {
+  background: #a0cfff;
+}
+
+body .formoverall .contentlist .subblock .susmessage {
+  color: #666;
+}
+
+body .formoverall .contentlist .subblock .susmessage > i {
+  background: url("../images/success_min_icon.png") no-repeat center center;
+}
+
+body .formoverall .contentlist .subblock .errmessage {
+  color: #ff0000;
+}
+
+body .formoverall .contentlist .subblock .errmessage > i {
+  background: url("../images/fail_min_icon.png") no-repeat center center;
+}
+
+body .formoverall .contentlist .el-input__inner {
+  height: 30px;
+  color: #333;
+}
+
+body .formoverall .contentlist .el-input__icon {
+  line-height: 30px;
+}
+
+body .formoverall .contentlist .el-textarea__inner {
+  height: 140px;
+}
+
+body .formoverall .contentlist .el-button--primary {
+  background: #4381e6;
+  height: 32px;
+  padding: 0;
+  width: 100px;
+  text-align: center;
+  border-radius: 20px;
+  line-height: 30px;
+}
+
+body .formoverall .contentlist .trainnum .el-col-1 {
+  text-align: center;
+}
+
+body .formoverall .contentlist .el-form-item.is-success .el-input__inner, body .formoverall .contentlist .el-form-item.is-success .el-input__inner:focus, body .formoverall .contentlist .el-form-item.is-success .el-textarea__inner, body .formoverall .contentlist .el-form-item.is-success .el-textarea__inner:focus {
+  border-color: #ccc;
+}
+
+body .formoverall .contentlist .is-success .el-input__inner, body .formoverall .contentlist .is-success .el-textarea__inner {
+  border-color: #ccc;
+}
+
+body .numberrule .el-form-item__label::before {
+  content: '*';
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff0000;
+}
+
+body .numberrule .el-date-editor.el-input {
+  width: 100%;
+}
+
+body .numberrule .numrandom {
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  height: 28px;
+  line-height: 28px;
+  margin-left: 10px;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+body .numberrule .numrandom .el-radio {
+  margin-right: 0;
+  margin-left: 10px;
+  color: #333;
+}
+
+body .numberrule .numrandom .el-radio .is-checked .el-radio__inner {
+  background: #666;
+  border-color: #666;
+}
+
+body .numberrule .numrandom .el-radio .el-radio__input.is-checked + .el-radio__label {
+  color: #333;
+}
+
+body .numberrule .numrandom .el-radio__label {
+  padding-left: 0;
+}
+
+body .numberrule .elbox {
+  margin-bottom: 25px;
+}
+
+body .numberrule .elbox > .el-col {
+  margin-right: 10px;
+}
+
+body .numberrule .elbox > .el-col .ruleblock {
+  position: relative;
+}
+
+body .numberrule .elbox > .el-col .ruleblock .el-form-item__error {
+  position: absolute;
+  top: 100%;
+  height: 20px;
+  line-height: 20px;
+}
+
+body .numberrule .elbox > .el-col .ruleblock .el-input__inner {
+  padding-left: 50px;
+}
+
+body .numberrule .elbox > .el-col .ruleblock .demonstration {
+  position: absolute;
+  left: 5px;
+  height: 30px;
+  line-height: 30px;
+  width: 45px;
+  color: #999;
+  top: 0;
+  z-index: 2;
+}
+
+body .el-table {
+  color: #666;
+}
+
+body .el-table thead {
+  color: #7f8f9c;
+}
+
+body .el-table .el-button--text {
+  color: #4381e6;
+}
+
+body .confirm-box .el-message-box__message {
+  text-align: center;
+}
+
+body .confirm-box .el-message-box__message .lssuetitle {
+  font-size: 18px;
+  margin-top: 18px;
+  color: #333;
+}
+
+body .confirm-box .el-message-box__message .lssuespan {
+  font-size: 14px;
+  min-height: 32px;
+  line-height: 32px;
+  color: #666;
+}
+
+body .confirm-box .el-message-box__message .waring-icon {
+  display: inline-block;
+  width: 50px;
+  background: #000;
+  height: 50px;
+  background: url("../images/fail_success.png") no-repeat center center;
+}
+
+body .confirm-box .el-message-box__message .primary-icon {
+  display: inline-block;
+  width: 50px;
+  background: #000;
+  height: 50px;
+  background: url("../images/danger_icon.png") no-repeat center center;
+}
+
+body .confirm-box .el-message-box__message .success-icon {
+  display: inline-block;
+  width: 50px;
+  background: #000;
+  height: 50px;
+  background: url("../images/success_icon.png") no-repeat center center;
+}
+
+body .confirm-box .el-message-box__title {
+  font-size: 14px;
+}
+
+body .confirm-box .el-message-box__btns {
+  text-align: center;
+  padding: 5px 15px 15px;
+}
+
+body .confirm-box .el-message-box__btns .el-button {
+  width: 100px;
+  font-size: 14px;
+  line-height: 32px;
+  border-radius: 34px;
+  padding: 0;
+  background: #fff;
+  border-color: #dadada;
+  color: #333;
+}
+
+body .confirm-box .el-message-box__btns .el-button:hover {
+  background: #3d76d4;
+  border-color: #3d76d4;
+  color: #fff;
+}
+
+body .pagination {
+  text-align: center;
+}
+
+body .pagination .el-pagination.is-background {
+  display: inline-block;
+  text-align: center;
+  padding: 10px 0;
+}
+
+body .pagination .el-pagination.is-background .btn-prev, body .pagination .el-pagination.is-background .btn-next {
+  border-radius: 100%;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+}
+
+body .pagination .el-pagination.is-background .el-pager > li {
+  font-weight: normal;
+  background: #fff;
+  border-radius: 30px;
+  border: 1px solid #dcdcdc;
+}
+
+body .pagination .el-pagination.is-background .el-pager li:not(.disabled).active {
+  border: 1px solid #4382e9;
+  background: #4382e9;
+}
+
+.firmname {
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.backgroundstar {
+  position: relative;
+  display: inline-block;
+  width: 72px;
+}
+
+.backgroundstar::before {
+  content: "";
+  display: inline-block;
+  height: 30px;
+  line-height: 40px;
+  vertical-align: middle;
+  background: url("../../assets/images/star.png") no-repeat left center;
+}
+
+.backgroundstar.star1::before {
+  width: 14px;
+}
+
+.backgroundstar.star2::before {
+  width: 28px;
+}
+
+.backgroundstar.star3::before {
+  width: 42px;
+}
+
+.backgroundstar.star4::before {
+  width: 60px;
+}
+
+.backgroundstar.star5::before {
+  width: 73px;
+}
