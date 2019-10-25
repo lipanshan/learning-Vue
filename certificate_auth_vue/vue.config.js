@@ -10,5 +10,5 @@ module.exports = {
     host: '193.168.14.32',
     port: 8080
   },
-  outputDir: 'dist'
+  outputDir: 'dist2'
 }

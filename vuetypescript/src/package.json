@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vuex-class": "^0.3.2"
+  }
+}

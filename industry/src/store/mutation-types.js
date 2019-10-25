@@ -1,0 +1,5 @@
+export const SET_USERNAME = 'SET_USERNAME'
+export const SET_AVATAR = 'SET_AVATAR'
+export const SET_MASK = 'SET_MASK'
+export const SET_LEFTMENU = 'SET_LEFTMENU'
+export const SET_AUTHORIZE_INFO = 'SET_AUTHORIZE_INFO'
